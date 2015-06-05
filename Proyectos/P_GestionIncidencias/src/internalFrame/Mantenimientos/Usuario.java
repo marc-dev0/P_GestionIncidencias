@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
+
 import Utilitarios.DateLabelFormatter;
 import Utilitarios.General;
 
@@ -26,6 +27,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JButton;
+import javax.swing.plaf.ListUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.JScrollPane;
@@ -34,6 +36,8 @@ import java.awt.event.ActionEvent;
 
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JCalendar;
+
+import javax.swing.JRadioButton;
 
 public class Usuario extends JInternalFrame implements ActionListener {
 	//Region variables de controles
@@ -132,7 +136,7 @@ public class Usuario extends JInternalFrame implements ActionListener {
 				}
 				{
 					panel = new JPanel();
-					panel.setBounds(12, 12, 355, 57);
+					panel.setBounds(12, 12, 576, 57);
 					panel.setBorder(BorderFactory.createTitledBorder("Filtro de búsqueda"));
 					panelListado.add(panel);
 					panel.setLayout(null);
@@ -150,9 +154,20 @@ public class Usuario extends JInternalFrame implements ActionListener {
 					{
 						btnBuscar = new JButton("Buscar");
 						btnBuscar.addActionListener(this);
-						btnBuscar.setBounds(226, 22, 117, 25);
+						btnBuscar.setBounds(371, 22, 105, 25);
 						panel.add(btnBuscar);
 					}
+					{
+						rdbTodos = new JRadioButton("Todos");
+						rdbTodos.setBounds(293, 23, 70, 23);
+						panel.add(rdbTodos);
+					}
+				}
+				{
+					btnNewButton = new JButton("New button");
+					btnNewButton.addActionListener(this);
+					btnNewButton.setBounds(618, 28, 117, 25);
+					panelListado.add(btnNewButton);
 				}
 			}
 			{
@@ -301,6 +316,8 @@ public class Usuario extends JInternalFrame implements ActionListener {
 	
 
 	private static Usuario instance =  null;
+	private JRadioButton rdbTodos;
+	private JButton btnNewButton;
 	public static Usuario getInstance(){
 		if(instance==null){
 			instance = new Usuario();
@@ -310,6 +327,9 @@ public class Usuario extends JInternalFrame implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnNewButton) {
+			do_btnNewButton_actionPerformed(e);
+		}
 		if (e.getSource() == btnBuscar) {
 			do_btnBuscar_actionPerformed(e);
 		}
@@ -372,7 +392,7 @@ public class Usuario extends JInternalFrame implements ActionListener {
 				tabbedPane.setEnabledAt(1, false);
 				tabbedPane.setEnabledAt(0, true);
 				tabbedPane.setSelectedIndex(0);
-				modelo.addRow(listDataToJtable(c_Usuario));
+				modelo.addRow(listaDataToJTable(c_Usuario));
 				habiltarBotones(true);
 				General.limpiar(panelMantenimiento);
 				}
@@ -399,14 +419,13 @@ public class Usuario extends JInternalFrame implements ActionListener {
 					tabbedPane.setEnabledAt(0, true);
 					tabbedPane.setSelectedIndex(0);
 					DefaultTableModel model = (DefaultTableModel) table.getModel();
-					model.setValueAt(Integer.toString(u.getCodigo()), table.getSelectedRow(), 0);
+					model.setValueAt(u.getCodigo(), table.getSelectedRow(), 0);
 					model.setValueAt(u.getNombre(), table.getSelectedRow(), 1);
 					model.setValueAt(u.getApellido(), table.getSelectedRow(), 2);
-					model.setValueAt(Integer.toString(u.getIdTipoDocumento()), table.getSelectedRow(), 3);
+					model.setValueAt(u.getIdTipoDocumento(), table.getSelectedRow(), 3);
 					model.setValueAt(u.getDocumento(), table.getSelectedRow(), 4);
-					model.setValueAt(Integer.toString(u.getArea()), table.getSelectedRow(), 5);
+					model.setValueAt(u.getArea(), table.getSelectedRow(), 5);
 					model.setValueAt(u.getCorreo(), table.getSelectedRow(), 6);
-					
 					model.setValueAt(u.getTelefono(), table.getSelectedRow(), 7);
 					model.setValueAt(General.parsearDatetoString(u.getFechaIngreso()), table.getSelectedRow(), 8);
 					//modelo.addRow(listDataToJtable(c_Usuario));
@@ -423,9 +442,6 @@ public class Usuario extends JInternalFrame implements ActionListener {
 		
 	}
 	protected void do_btnLimpiar_actionPerformed(ActionEvent e) {
-		c_Usuario.generarCodigo();
-		BE_Usuario objUsuario = new BE_Usuario();
-		JOptionPane.showMessageDialog(null, "" + objUsuario.getCodigo());
 		General.limpiar(panelMantenimiento);
 		txtCodigo.requestFocus();
 	}
@@ -445,14 +461,14 @@ public class Usuario extends JInternalFrame implements ActionListener {
 			return;
 		else{
 			try {
-				txtCodigo.setText((String) table.getValueAt(r, 0));
-				txtNombre.setText((String) table.getValueAt(r, 1));
-				txtApellidos.setText((String) table.getValueAt(r,2));
-				cboTipoDocumento.setSelectedIndex(Integer.parseInt((String) table.getValueAt(r,3)));
-				txtDNI.setText((String) table.getValueAt(r, 4));
-				cboArea.setSelectedIndex(Integer.parseInt((String) table.getValueAt(r, 5)));
-				txtCorreo.setText((String) table.getValueAt(r,6));
-				txtTelefono.setText((String) table.getValueAt(r, 7));
+				txtCodigo.setText(""+ table.getValueAt(r, 0));
+				txtNombre.setText(""+ table.getValueAt(r, 1));
+				txtApellidos.setText(""+ table.getValueAt(r,2));
+				cboTipoDocumento.setSelectedIndex((int) table.getValueAt(r,3));
+				txtDNI.setText(""+ table.getValueAt(r, 4));
+				cboArea.setSelectedIndex((int) table.getValueAt(r, 5));
+				txtCorreo.setText("" + table.getValueAt(r,6));
+				txtTelefono.setText(""+ table.getValueAt(r, 7));
 				dateChooser.setDate(General.parseStringtoDate((String) table.getValueAt(r, 8)));
 				tabbedPane.setSelectedIndex(1);
 				tabbedPane.setEnabledAt(0,false);
@@ -464,17 +480,16 @@ public class Usuario extends JInternalFrame implements ActionListener {
 				e1.printStackTrace();
 			}
 		}
-		
-		
 	}
 	
-	String[] listDataToJtable(UsuarioController UsuarioC){
-		String [] data = null;
+	/*
+	 * String[] listDataToJtable(UsuarioController UsuarioC){
+		String [] data = new String[9];
 		//probar en otra clase si se puede retornar y guardar en el modelo del Jtable un arreglo de 
 		//objetos en ves de un arreglo de String;
 		//Object [] datos;
 		for(int i = 0; i < c_Usuario.sizeUsuario(); i++){
-			data = new String[9];
+			//data = new String[9];
 			//datos = new Object[]{c_Usuario.getUsuario(i).getCodigo()};
 			data[0] = Integer.toString(c_Usuario.getUsuario(i).getCodigo());
 			data[1] = c_Usuario.getUsuario(i).getNombre();
@@ -487,6 +502,17 @@ public class Usuario extends JInternalFrame implements ActionListener {
 			data[8] = General.parsearDatetoString((c_Usuario.getUsuario(i).getFechaIngreso()));
 		}
 		return data;
+	}*/
+	Object[] listaDataToJTable(UsuarioController UsuarioC){
+		Object[] data=null;
+		for(int i=0; i < c_Usuario.sizeUsuario();i++){
+					data = new Object[]{
+							c_Usuario.getUsuario(i).getCodigo(),c_Usuario.getUsuario(i).getNombre(),c_Usuario.getUsuario(i).getApellido(),
+							c_Usuario.getUsuario(i).getIdTipoDocumento(),c_Usuario.getUsuario(i).getDocumento(),c_Usuario.getUsuario(i).getArea(), 
+							c_Usuario.getUsuario(i).getCorreo(), c_Usuario.getUsuario(i).getTelefono(),General.parsearDatetoString(c_Usuario.getUsuario(i).getFechaIngreso())
+			};
+		}
+		return data;
 	}
 	
 	protected void do_btnEliminar_actionPerformed(ActionEvent e) {
@@ -495,7 +521,7 @@ public class Usuario extends JInternalFrame implements ActionListener {
 			if(General.validateJTableisEmpty(r))
 				return;
 			else{
-				int codigo = Integer.parseInt((String) table.getValueAt(r, 0));
+				int codigo = (int) table.getValueAt(r, 0);
 				BE_Usuario objUsuarioBE = c_Usuario.getUsuarioxCodigo(codigo);
 				c_Usuario.eliminarUsuario(objUsuarioBE);
 				modelo.removeRow(r);
@@ -544,7 +570,39 @@ public class Usuario extends JInternalFrame implements ActionListener {
 			JOptionPane.showMessageDialog(this, mensaje,"ERROR", JOptionPane.WARNING_MESSAGE);
 		}
 	}
-	protected void do_btnBuscar_actionPerformed(ActionEvent e){ 
+	protected void do_btnBuscar_actionPerformed(ActionEvent e)
+	{
 		
+		if(rdbTodos.isSelected()){
+			Object[] datos;
+			if(c_Usuario.listAllUSuarios().isEmpty()){
+				JOptionPane.showMessageDialog(null, "No hay data");
+				return;
+			}else{
+				int row = table.getSelectedRow();
+				int codigo;
+				
+				for(BE_Usuario u : c_Usuario.listAllUSuarios()){
+					datos = new Object[]{
+							u.getCodigo(),u.getNombre(),u.getApellido(),u.getIdTipoDocumento(),u.getDocumento(),u.getArea(), 
+							u.getCorreo(),u.getTelefono(), General.parsearDatetoString(u.getFechaIngreso())
+					};
+					if(General.validateJTableisEmpty(row)){
+						for(int i = 0; i < c_Usuario.sizeUsuario(); i++){
+							modelo.addRow(datos);
+						}
+					}else{
+						return;
+					}
+					
+				}
+				
+			}
+		
+		}
+	}
+	protected void do_btnNewButton_actionPerformed(ActionEvent e) {
+		c_Usuario.dataPrueba();
 	}
 }
+

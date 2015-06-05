@@ -1,5 +1,7 @@
 package Entidades;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class BE_Usuario {
@@ -14,6 +16,22 @@ public class BE_Usuario {
 	private Date fechaIngreso;
 	private int estado;
 	
+	public BE_Usuario(int codigo, String nombre, String apellidos, int idDocumento, String documento, int area, String correo, String telefono,
+					  Date fecha, int estado){
+		this.codigo = codigo;
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.idTipoDocumento = idDocumento;
+		this.documento = documento;
+		this.area = area;
+		this.correo = correo;
+		this.telefono = telefono;
+		this.fechaIngreso = fecha;
+		this.estado = estado;
+	}
+	public BE_Usuario(){
+		
+	}
 	public int getCodigo() {
 		return codigo;
 	}

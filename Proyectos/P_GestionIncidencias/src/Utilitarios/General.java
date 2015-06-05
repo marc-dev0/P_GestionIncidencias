@@ -81,7 +81,7 @@ public class General {
 	
 	public static Boolean validateJTableisEmpty(int indexRow){
 		if(indexRow == -1){
-			JOptionPane.showMessageDialog(null, "Debe seleccionar un registro");
+			//JOptionPane.showMessageDialog(null, "Debe seleccionar un registro");
 			return true;
 		}
 		else 
