@@ -12,9 +12,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
-
-import org.jdatepicker.impl.UtilDateModel;
-
 import Utilitarios.DateLabelFormatter;
 import Utilitarios.General;
 

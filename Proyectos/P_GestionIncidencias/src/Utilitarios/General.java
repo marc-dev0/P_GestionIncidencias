@@ -17,11 +17,6 @@ import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import org.jdatepicker.JDatePicker;
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
-
 public class General {
 	public static void addIFrame(JDesktopPane jdp, JInternalFrame jif){
 		boolean flag = false;
@@ -120,23 +115,6 @@ public class General {
         	JComboBox combo = (JComboBox) component;
         	combo.setSelectedIndex(0);
         }
-        //falta implementar la idea es que el valor del datepicker vuelva al dia actual
-        if (component instanceof JDatePickerImpl){
-        	JDatePickerImpl datePicker = (JDatePickerImpl) component;
-        	
-        }
-        
-	}
-	
-	public static JDatePickerImpl JdatePicker(){
-		UtilDateModel model = new UtilDateModel();
-		Properties p = new Properties();
-		p.put("text.today", "today");
-		p.put("text.month", "Month");
-		p.put("text.year", "Year");
-		JDatePanelImpl datePanel = new JDatePanelImpl(model, p);
-		JDatePickerImpl datePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
-		return datePicker;
-		
+
 	}
 }
