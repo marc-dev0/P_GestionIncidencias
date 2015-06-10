@@ -14,6 +14,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JDesktopPane;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -43,9 +44,15 @@ public class Menu_Principal extends JFrame implements ActionListener {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		//try {
+		//	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		//} catch (Throwable e) {
+		//	e.printStackTrace();
+		//}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					
 					Menu_Principal frame = new Menu_Principal();
 					frame.setVisible(true);
 					frame.setExtendedState(MAXIMIZED_BOTH);

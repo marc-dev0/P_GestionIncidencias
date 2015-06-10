@@ -9,6 +9,7 @@ import java.text.DateFormat;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
@@ -16,6 +17,8 @@ import java.util.Properties;
 import Utilitarios.DateLabelFormatter;
 import Utilitarios.General;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
@@ -27,6 +30,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JButton;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.plaf.ListUI;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -39,48 +44,40 @@ import com.toedter.calendar.JCalendar;
 
 import javax.swing.JRadioButton;
 
-public class Usuario extends JInternalFrame implements ActionListener {
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
+
+public class Usuario extends JInternalFrame implements ActionListener{
+	private static Usuario instance =  null;
+	public static Usuario getInstance(){
+		if(instance==null){
+			instance = new Usuario();
+		}
+		return instance;
+		
+	}
 	//Region variables de controles
+	
+	private JRadioButton rdbTodos;
+	private JLabel lblEstado,lblArea, lblCodigo, lblNombre, lblApellidos,lblTipoDocumento, lblDni, lblarea,
+				   lblCorreo, lblTelefono, lblFechaDeIngreso, lblBCodigo;
+	private JTextField txtCodigo,txtNombre, txtApellidos, txtDNI, txtCorreo, txtTelefono, txtBusquedaCodigo;
+	private JComboBox cboEstado, cboTipoDocumento, cboArea,cboBArea;
+	private JButton btnRegistrar, btnEditar, btnEliminar, btnLimpiar,btnVolver, btnSalir;
 	private DefaultTableModel modelo;
-	private JTextField textField_7;
 	private JTabbedPane tabbedPane;
-	private JPanel panelListado;
-	private JPanel panelMantenimiento;
-	private JLabel lblD;
-	private JLabel lblCodigo;
-	private JLabel lblNombre;
-	private JLabel lblApellidos;
-	private JTextField txtCodigo;
-	private JTextField txtNombre;
-	private JTextField txtApellidos;
-	private JLabel lblTipoDocumento;
-	private JLabel lblDni;
-	private JTextField txtDNI;
-	private JLabel lblarea;
-	private JComboBox cboTipoDocumento;
-	private JLabel lblCorreo;
-	private JTextField txtCorreo;
-	private JLabel lblTelfono;
-	private JTextField txtTelefono;
-	private JLabel lblFechaDeIngreso;
-	private JComboBox cboArea;
-	private JButton btnRegistrar;
-	private JButton btnEditar;
-	private JButton btnEliminar;
-	private JButton btnLimpiar;
+	private JPanel panelListado, panelMantenimiento, panelFiltro;
 	private JScrollPane scrollPane;
 	private JTable table;
-	private JButton btnVolver;
-	private JPanel panel;
-	private JLabel lblCdigo;
-	private JTextField txtBusquedaCodigo;
-	private JButton btnBuscar;
-	private JButton btnSalir;
 	private JDateChooser dateChooser;
 
 	//EndRegion
+	
+	
 	private String estado="";
-	private UsuarioController c_Usuario = new UsuarioController();
+	private UsuarioController usuarioController = new UsuarioController();
 		public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -98,12 +95,12 @@ public class Usuario extends JInternalFrame implements ActionListener {
 	private Usuario() {
 		setClosable(true);
 		setTitle("Usuarios");
-		setBounds(100, 100, 1300, 373);
+		setBounds(100, 100, 1300, 404);
 		getContentPane().setLayout(null);
 		
 		{
 			tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-			tabbedPane.setBounds(0, 0, 1158, 340);
+			tabbedPane.setBounds(0, 0, 1158, 372);
 			getContentPane().add(tabbedPane);
 		
 			{
@@ -116,58 +113,98 @@ public class Usuario extends JInternalFrame implements ActionListener {
 					panelListado.add(scrollPane);
 					{
 						table = new JTable();
-						table.setAutoCreateRowSorter(true);
+						//table.setAutoCreateRowSorter(true);
 						table.getTableHeader().setToolTipText("Click para alinear");
-						
+						table.setRowSelectionAllowed(false);
 						table.setModel(modelo = new DefaultTableModel(
 							new Object[][] {
 							},
 							new String[] {
-								"Codigo", "Nombre", "Apellidos", "idTipoDocumento", "Doc. de Identidad", "Area", "Correo", "Tel\u00E9fono", "Fecha de Ingreso"
+								"Codigo", "Nombre", "Apellidos", "idTipoDocumento", "Doc. de Identidad", "Area", "Correo", "Tel\u00E9fono", "Fecha de Ingreso", "Estado"
 							}
 						));
 						table.getColumnModel().getColumn(0).setMinWidth(50);
 						table.getColumnModel().getColumn(0).setMaxWidth(50);
 						table.getColumnModel().getColumn(3).setMinWidth(0);
 						table.getColumnModel().getColumn(3).setMaxWidth(0);
+						table.getColumnModel().getColumn(9).setMinWidth(0);
+						table.getColumnModel().getColumn(9).setMaxWidth(0);
 						scrollPane.setViewportView(table);
 					    
 					}
 				}
 				{
-					panel = new JPanel();
-					panel.setBounds(12, 12, 576, 57);
-					panel.setBorder(BorderFactory.createTitledBorder("Filtro de búsqueda"));
-					panelListado.add(panel);
-					panel.setLayout(null);
+					panelFiltro = new JPanel();
+					panelFiltro.setBounds(12, 12, 934, 57);
+					panelFiltro.setBorder(BorderFactory.createTitledBorder("Filtro de búsqueda"));
+					panelListado.add(panelFiltro);
+					panelFiltro.setLayout(null);
 					{
-						lblCdigo = new JLabel("Código:");
-						lblCdigo.setBounds(12, 32, 70, 15);
-						panel.add(lblCdigo);
+						lblBCodigo = new JLabel("Código:");
+						lblBCodigo.setBounds(12, 32, 70, 15);
+						panelFiltro.add(lblBCodigo);
 					}
 					{
 						txtBusquedaCodigo = new JTextField();
-						txtBusquedaCodigo.setBounds(88, 30, 131, 17);
-						panel.add(txtBusquedaCodigo);
+						txtBusquedaCodigo.setBounds(84, 31, 105, 17);
+						panelFiltro.add(txtBusquedaCodigo);
 						txtBusquedaCodigo.setColumns(10);
-					}
-					{
-						btnBuscar = new JButton("Buscar");
-						btnBuscar.addActionListener(this);
-						btnBuscar.setBounds(371, 22, 105, 25);
-						panel.add(btnBuscar);
+						txtBusquedaCodigo.addActionListener(action);
+						txtBusquedaCodigo.getDocument().addDocumentListener(new DocumentListener(){
+							@Override
+							public void removeUpdate(DocumentEvent e) {
+								// TODO Auto-generated method stub
+								if(txtBusquedaCodigo.getText().isEmpty()){
+									rdbTodos.setEnabled(true);
+									cboBArea.setEnabled(true);
+								}
+							}
+							
+							@Override
+							public void insertUpdate(DocumentEvent e) {
+								// TODO Auto-generated method stub
+								if(!rdbTodos.isSelected() || rdbTodos.isSelected()){
+									rdbTodos.setEnabled(false);
+									rdbTodos.setSelected(false);
+									cboBArea.setEnabled(false);
+								}
+							}
+							
+							@Override
+							public void changedUpdate(DocumentEvent e) {
+								// TODO Auto-generated method stub
+								
+							}
+						});
 					}
 					{
 						rdbTodos = new JRadioButton("Todos");
-						rdbTodos.setBounds(293, 23, 70, 23);
-						panel.add(rdbTodos);
+						rdbTodos.addActionListener(this);
+						rdbTodos.setBounds(739, 23, 70, 23);
+						panelFiltro.add(rdbTodos);
+						
 					}
-				}
-				{
-					btnNewButton = new JButton("New button");
-					btnNewButton.addActionListener(this);
-					btnNewButton.setBounds(618, 28, 117, 25);
-					panelListado.add(btnNewButton);
+					{
+						lblArea = new JLabel("Area:");
+						lblArea.setBounds(204, 32, 44, 13);
+						panelFiltro.add(lblArea);
+					}
+					{
+						cboBArea = new JComboBox();
+						cboBArea.setBounds(254, 27, 130, 24);
+						cboBArea.setModel(new DefaultComboBoxModel(new String[]{
+								"Sistemas","Tu vieja"
+						}));
+						panelFiltro.add(cboBArea);
+						cboBArea.addActionListener(new ActionListener() {
+							
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								fillTablexArea();
+							}
+						});
+						
+					}
 				}
 			}
 			{
@@ -192,6 +229,7 @@ public class Usuario extends JInternalFrame implements ActionListener {
 				}
 				{
 					txtCodigo = new JTextField();
+					txtCodigo.setEditable(false);
 					txtCodigo.setBounds(78, 8, 168, 24);
 					panelMantenimiento.add(txtCodigo);
 					
@@ -246,9 +284,9 @@ public class Usuario extends JInternalFrame implements ActionListener {
 					panelMantenimiento.add(txtCorreo);
 				}
 				{
-					lblTelfono = new JLabel("Teléfono:");
-					lblTelfono.setBounds(12, 230, 78, 15);
-					panelMantenimiento.add(lblTelfono);
+					lblTelefono = new JLabel("Teléfono:");
+					lblTelefono.setBounds(12, 230, 78, 15);
+					panelMantenimiento.add(lblTelefono);
 				}
 				{
 					txtTelefono = new JTextField();
@@ -268,8 +306,19 @@ public class Usuario extends JInternalFrame implements ActionListener {
 				}
 				{
 					dateChooser = new JDateChooser();
-					dateChooser.setBounds(146, 256, 155, 19);
+					dateChooser.setBounds(146, 256, 155, 24);
 					panelMantenimiento.add(dateChooser);
+				}
+				{
+					lblEstado = new JLabel("Estado:");
+					lblEstado.setBounds(12, 296, 70, 15);
+					panelMantenimiento.add(lblEstado);
+				}
+				{
+					cboEstado = new JComboBox();
+					cboEstado.setModel(new DefaultComboBoxModel(new String[] {"Activo", "No Activo"}));
+					cboEstado.setBounds(124, 291, 155, 24);
+					panelMantenimiento.add(cboEstado);
 				}
 			}
 		}
@@ -314,24 +363,9 @@ public class Usuario extends JInternalFrame implements ActionListener {
 
 	}
 	
-
-	private static Usuario instance =  null;
-	private JRadioButton rdbTodos;
-	private JButton btnNewButton;
-	public static Usuario getInstance(){
-		if(instance==null){
-			instance = new Usuario();
-		}
-		return instance;
-		
-	}
-	
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == btnNewButton) {
-			do_btnNewButton_actionPerformed(e);
-		}
-		if (e.getSource() == btnBuscar) {
-			do_btnBuscar_actionPerformed(e);
+		if (e.getSource() == rdbTodos) {
+			do_rdbTodos_actionPerformed(e);
 		}
 		if (e.getSource() == btnEliminar) {
 			do_btnEliminar_actionPerformed(e);
@@ -352,88 +386,54 @@ public class Usuario extends JInternalFrame implements ActionListener {
 			do_btnRegistrar_actionPerformed(e);
 		}
 	}
+	
 	private void do_btnVolver_actionPerformed(ActionEvent e) {
+		
 		tabbedPane.setSelectedIndex(0);
 		tabbedPane.setEnabledAt(1, false);
 		tabbedPane.setEnabledAt(0, true);
 		habiltarBotones(!false);
+		General.limpiar(panelMantenimiento);
 		txtBusquedaCodigo.requestFocus();
+		estado = "";
 	}
 	
 	protected void do_btnRegistrar_actionPerformed(ActionEvent e) {
-		
+	
 		try {
 			if(tabbedPane.getSelectedIndex() == 0){
-				tabbedPane.setSelectedIndex(1);
-				tabbedPane.setEnabledAt(1, true);
-				tabbedPane.setEnabledAt(0, false);
+				General.changePanel(tabbedPane, true);
 				habiltarBotones(true);
-				txtCodigo.requestFocus();
+				txtNombre.requestFocus();
+				int codigo = usuarioController.generarCodigo();
+				txtCodigo.setText(""+ codigo);
+				estado = "Guardar";
 			}
 			else if(tabbedPane.getSelectedIndex() == 1){
-				if(estado == ""){
+				
+				if (estado == "Guardar"){
 				BE_Usuario objUsuario = new BE_Usuario();
-				//txtCodigo.setText(""+objUsuario.getCodigo());
-				objUsuario.setCodigo(Integer.parseInt(txtCodigo.getText()));
-				objUsuario.setNombre(txtNombre.getText());
-				objUsuario.setApellidos(txtApellidos.getText());
-				objUsuario.setIdTipoDocumento(cboTipoDocumento.getSelectedIndex());
-				objUsuario.setDocumento(txtDNI.getText());
-				objUsuario.setCorreo(txtCorreo.getText());
-				objUsuario.setArea(cboArea.getSelectedIndex());
-				objUsuario.setTelefono(txtTelefono.getText());
-				objUsuario.setEstado(1);
-				int año= dateChooser.getCalendar().get(Calendar.YEAR);
-				int mes = dateChooser.getCalendar().get(Calendar.MONTH);
-				int dia = dateChooser.getCalendar().get(Calendar.DAY_OF_MONTH);
-				String fecha = dia + "-" + mes + "-" + año;
-				objUsuario.setFechaIngreso(General.parseStringtoDate(fecha));
-				c_Usuario.registrarUsuario(objUsuario);
-				tabbedPane.setEnabledAt(1, false);
-				tabbedPane.setEnabledAt(0, true);
-				tabbedPane.setSelectedIndex(0);
-				modelo.addRow(listaDataToJTable(c_Usuario));
+				usuarioController.registrarUsuario(objUsuario);
+				setDataUsuario(objUsuario);
+				addRowInserted();
+				General.changePanel(tabbedPane, false);
 				habiltarBotones(true);
 				General.limpiar(panelMantenimiento);
+				estado ="";
 				}
 				else if(estado == "Editar"){
 					int codigo = Integer.parseInt(txtCodigo.getText());
-					BE_Usuario u = c_Usuario.getUsuarioxCodigo(codigo);
-					int pos = c_Usuario.getPosUsuario(u);
-					u.setCodigo(Integer.parseInt(txtCodigo.getText()));
-					u.setNombre(txtNombre.getText());
-					u.setApellidos(txtApellidos.getText());
-					u.setIdTipoDocumento(cboTipoDocumento.getSelectedIndex());
-					u.setDocumento(txtDNI.getText());
-					u.setCorreo(txtCorreo.getText());
-					u.setArea(cboArea.getSelectedIndex());
-					u.setTelefono(txtTelefono.getText());
-					u.setEstado(1);
-					int año= dateChooser.getCalendar().get(Calendar.YEAR);
-					int mes = dateChooser.getCalendar().get(Calendar.MONTH);
-					int dia = dateChooser.getCalendar().get(Calendar.DAY_OF_MONTH);
-					String fecha = dia + "-" + mes + "-" + año;
-					u.setFechaIngreso(General.parseStringtoDate(fecha));
-					c_Usuario.modificarUsuario(pos, u);
-					tabbedPane.setEnabledAt(1, false);
-					tabbedPane.setEnabledAt(0, true);
-					tabbedPane.setSelectedIndex(0);
-					DefaultTableModel model = (DefaultTableModel) table.getModel();
-					model.setValueAt(u.getCodigo(), table.getSelectedRow(), 0);
-					model.setValueAt(u.getNombre(), table.getSelectedRow(), 1);
-					model.setValueAt(u.getApellido(), table.getSelectedRow(), 2);
-					model.setValueAt(u.getIdTipoDocumento(), table.getSelectedRow(), 3);
-					model.setValueAt(u.getDocumento(), table.getSelectedRow(), 4);
-					model.setValueAt(u.getArea(), table.getSelectedRow(), 5);
-					model.setValueAt(u.getCorreo(), table.getSelectedRow(), 6);
-					model.setValueAt(u.getTelefono(), table.getSelectedRow(), 7);
-					model.setValueAt(General.parsearDatetoString(u.getFechaIngreso()), table.getSelectedRow(), 8);
-					//modelo.addRow(listDataToJtable(c_Usuario));
+					BE_Usuario u = usuarioController.getUsuarioxCodigo(codigo);
+					int pos = usuarioController.getPosUsuario(u);
+					setDataUsuario(u);
+					usuarioController.modificarUsuario(pos, u);
+					editRowSelected(u);
+					General.changePanel(tabbedPane, false);
+					General.limpiar(panelMantenimiento);
 					habiltarBotones(true);
-				
+					estado ="";
 				}
 			}
-			
 			//JButton[] botones = {btnRegistrar,btnVolver};
 			//General.cambiarTitulo(botones);
 		} catch (Exception e2) {
@@ -441,6 +441,7 @@ public class Usuario extends JInternalFrame implements ActionListener {
 		}
 		
 	}
+	
 	protected void do_btnLimpiar_actionPerformed(ActionEvent e) {
 		General.limpiar(panelMantenimiento);
 		txtCodigo.requestFocus();
@@ -448,31 +449,43 @@ public class Usuario extends JInternalFrame implements ActionListener {
 	
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {
 		this.dispose();
+		instance = null;
 	}
 	
-	protected void habiltarBotones(boolean estado){
-		JButton[] botones = {btnLimpiar,btnEditar,btnEliminar,btnVolver};
-		General.habilitar(botones, estado);
+	protected void do_btnEliminar_actionPerformed(ActionEvent e) {
+		try {
+			int r = table.getModel().getRowCount();
+			if(General.validateJTableisEmpty(r,r))
+				return;
+			else{
+				int respuesta = JOptionPane.showConfirmDialog(null, "¿Está seguro de eliminar?", "advertencia", 
+						JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,null);
+				if(respuesta == JOptionPane.YES_OPTION){
+					int row = table.getSelectedRow();
+					int codigo = (int) table.getValueAt(row, 0);
+					BE_Usuario objUsuarioBE = usuarioController.getUsuarioxCodigo(codigo);
+					usuarioController.eliminarUsuario(objUsuarioBE);
+					modelo.removeRow(row);
+				}else
+					return;
+				
+			}
+		} catch (Exception e2) {
+			e2.printStackTrace();
+		
+		}
 	}
+	
 	protected void do_btnEditar_actionPerformed(ActionEvent e) {
 		estado = "Editar";
-		int r = table.getSelectedRow();
-		if(General.validateJTableisEmpty(r))
+		int r = table.getSelectedRow(), row = table.getModel().getRowCount();
+		
+		if(General.validateJTableisEmpty(row,r))
 			return;
 		else{
 			try {
-				txtCodigo.setText(""+ table.getValueAt(r, 0));
-				txtNombre.setText(""+ table.getValueAt(r, 1));
-				txtApellidos.setText(""+ table.getValueAt(r,2));
-				cboTipoDocumento.setSelectedIndex((int) table.getValueAt(r,3));
-				txtDNI.setText(""+ table.getValueAt(r, 4));
-				cboArea.setSelectedIndex((int) table.getValueAt(r, 5));
-				txtCorreo.setText("" + table.getValueAt(r,6));
-				txtTelefono.setText(""+ table.getValueAt(r, 7));
-				dateChooser.setDate(General.parseStringtoDate((String) table.getValueAt(r, 8)));
-				tabbedPane.setSelectedIndex(1);
-				tabbedPane.setEnabledAt(0,false);
-				tabbedPane.setEnabledAt(1,true);
+				carryDataToControls(r);
+				General.changePanel(tabbedPane, true);
 				habiltarBotones(true);
 				txtCodigo.requestFocus();
 			} catch (Exception e1) {
@@ -482,127 +495,174 @@ public class Usuario extends JInternalFrame implements ActionListener {
 		}
 	}
 	
-	/*
-	 * String[] listDataToJtable(UsuarioController UsuarioC){
-		String [] data = new String[9];
-		//probar en otra clase si se puede retornar y guardar en el modelo del Jtable un arreglo de 
-		//objetos en ves de un arreglo de String;
-		//Object [] datos;
-		for(int i = 0; i < c_Usuario.sizeUsuario(); i++){
-			//data = new String[9];
-			//datos = new Object[]{c_Usuario.getUsuario(i).getCodigo()};
-			data[0] = Integer.toString(c_Usuario.getUsuario(i).getCodigo());
-			data[1] = c_Usuario.getUsuario(i).getNombre();
-			data[2] = c_Usuario.getUsuario(i).getApellido();
-			data[3] = Integer.toString(c_Usuario.getUsuario(i).getIdTipoDocumento());
-			data[4] = c_Usuario.getUsuario(i).getDocumento();
-			data[5] = Integer.toString(c_Usuario.getUsuario(i).getArea());
-			data[6] = c_Usuario.getUsuario(i).getCorreo();
-			data[7] = c_Usuario.getUsuario(i).getTelefono();
-			data[8] = General.parsearDatetoString((c_Usuario.getUsuario(i).getFechaIngreso()));
-		}
-		return data;
-	}*/
-	Object[] listaDataToJTable(UsuarioController UsuarioC){
-		Object[] data=null;
-		for(int i=0; i < c_Usuario.sizeUsuario();i++){
-					data = new Object[]{
-							c_Usuario.getUsuario(i).getCodigo(),c_Usuario.getUsuario(i).getNombre(),c_Usuario.getUsuario(i).getApellido(),
-							c_Usuario.getUsuario(i).getIdTipoDocumento(),c_Usuario.getUsuario(i).getDocumento(),c_Usuario.getUsuario(i).getArea(), 
-							c_Usuario.getUsuario(i).getCorreo(), c_Usuario.getUsuario(i).getTelefono(),General.parsearDatetoString(c_Usuario.getUsuario(i).getFechaIngreso())
-			};
-		}
-		return data;
-	}
-	
-	protected void do_btnEliminar_actionPerformed(ActionEvent e) {
-		try {
-			int r = table.getSelectedRow();
-			if(General.validateJTableisEmpty(r))
-				return;
-			else{
-				int codigo = (int) table.getValueAt(r, 0);
-				BE_Usuario objUsuarioBE = c_Usuario.getUsuarioxCodigo(codigo);
-				c_Usuario.eliminarUsuario(objUsuarioBE);
-				modelo.removeRow(r);
-			}
-			/*String [] datos;
-			for(int i = 0 ; i < c_Usuario.sizeUsuario(); i++ ){
-				datos = new String[9];
-				datos[0] = Integer.toString(c_Usuario.getUsuario(i).getCodigo());
-				datos[1] = c_Usuario.getUsuario(i).getNombre();
-				datos[2] = c_Usuario.getUsuario(i).getApellido();
-				datos[3] = Integer.toString(c_Usuario.getUsuario(i).getIdTipoDocumento());
-				datos[4] = c_Usuario.getUsuario(i).getDocumento();
-				datos[5] = Integer.toString(c_Usuario.getUsuario(i).getArea());
-				datos[6] = c_Usuario.getUsuario(i).getCorreo();
-				datos[7] = c_Usuario.getUsuario(i).getTelefono();
-				datos[8] = General.parsearDatetoString((c_Usuario.getUsuario(i).getFechaIngreso()));
-				modelo.addRow(datos);
-			}
-			TableColumn column1 = null;
-			column1 = table.getColumnModel().getColumn(0);
-			column1.setPreferredWidth(60);
-			TableColumn column2 = null;
-			column2 = table.getColumnModel().getColumn(1);
-			column2.setPreferredWidth(80);
-			TableColumn column3 = null;
-			column3 = table.getColumnModel().getColumn(2);
-			column3.setPreferredWidth(60);
-			TableColumn column4 = null;
-			column4 = table.getColumnModel().getColumn(3);
-			column4.setPreferredWidth(80);
-			TableColumn column5 = null;
-			column5 = table.getColumnModel().getColumn(4);
-			column5.setPreferredWidth(60);
-			TableColumn column6 = null;
-			column6 = table.getColumnModel().getColumn(5);
-			column6.setPreferredWidth(80);
-			TableColumn column7 = null;
-			column7 = table.getColumnModel().getColumn(6);
-			column7.setPreferredWidth(200);
-			TableColumn column8 = null;
-			column8 = table.getColumnModel().getColumn(7);
-			column8.setPreferredWidth(80);*/
-		} catch (NullPointerException e2) {
-			String mensaje = "";
-			mensaje = e2.getMessage();
-			JOptionPane.showMessageDialog(this, mensaje,"ERROR", JOptionPane.WARNING_MESSAGE);
-		}
-	}
-	protected void do_btnBuscar_actionPerformed(ActionEvent e)
-	{
-		
+	protected void do_rdbTodos_actionPerformed(ActionEvent e) {
 		if(rdbTodos.isSelected()){
-			Object[] datos;
-			if(c_Usuario.listAllUSuarios().isEmpty()){
+			if(usuarioController.listAllUSuarios().isEmpty()){
 				JOptionPane.showMessageDialog(null, "No hay data");
 				return;
 			}else{
-				int row = table.getSelectedRow();
-				int codigo;
-				
-				for(BE_Usuario u : c_Usuario.listAllUSuarios()){
-					datos = new Object[]{
-							u.getCodigo(),u.getNombre(),u.getApellido(),u.getIdTipoDocumento(),u.getDocumento(),u.getArea(), 
-							u.getCorreo(),u.getTelefono(), General.parsearDatetoString(u.getFechaIngreso())
-					};
-					if(General.validateJTableisEmpty(row)){
-						for(int i = 0; i < c_Usuario.sizeUsuario(); i++){
-							modelo.addRow(datos);
-						}
-					}else{
-						return;
-					}
-					
-				}
-				
+			
+				fillTable();
+				return;
 			}
 		
 		}
 	}
-	protected void do_btnNewButton_actionPerformed(ActionEvent e) {
-		c_Usuario.dataPrueba();
+	
+	Action action = new AbstractAction(){
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			modelo.setRowCount(0);
+			if(txtBusquedaCodigo.getText().isEmpty())
+			{
+				fillTable();
+				return;
+			}else{
+			DefaultTableModel model = (DefaultTableModel) table.getModel();
+				
+				int codigo = Integer.parseInt(txtBusquedaCodigo.getText());
+				BE_Usuario u = usuarioController.listarUsuarioxCodigo(codigo);
+				Object[] data = new Object[]{
+						u.getCodigo(), u.getNombre(),u.getApellido(),
+						u.getIdTipoDocumento(), u.getDocumento(), u.getArea(),
+						u.getCorreo(), u.getTelefono(), General.parsearDatetoString(u.getFechaIngreso()),
+						u.getEstado()
+				};
+					model.addRow(data);
+			}
+		}
+	};
+	
+	//Region Metodos para JTable
+	void carryDataToControls(int r) {
+		txtCodigo.setText(""+ table.getValueAt(r, 0));
+		txtNombre.setText(""+ table.getValueAt(r, 1));
+		txtApellidos.setText(""+ table.getValueAt(r,2));
+		cboTipoDocumento.setSelectedIndex((int) table.getValueAt(r,3));
+		txtDNI.setText(""+ table.getValueAt(r, 4));
+		cboArea.setSelectedIndex((int) table.getValueAt(r, 5));
+		txtCorreo.setText("" + table.getValueAt(r,6));
+		txtTelefono.setText(""+ table.getValueAt(r, 7));
+		dateChooser.setDate(General.parseStringtoDate((String) table.getValueAt(r, 8)));
+		cboEstado.setSelectedIndex((int) table.getValueAt(r, 9));
 	}
+	void addRowInserted(){
+		modelo.addRow(new Object[]{
+				leerCodigo(), leerNombre(), leerApellidos(), leerComboTipoDocumento(), leerDocumento(),
+				leerArea(), leerCorreo(), leerTelefono(), leerFecha(), leerEstado()
+			});
+	}
+	
+	void editRowSelected(BE_Usuario u){
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		model.setValueAt(u.getCodigo(), table.getSelectedRow(),0);
+		model.setValueAt(u.getNombre(), table.getSelectedRow(), 1);
+		model.setValueAt(u.getApellido(), table.getSelectedRow(), 2);
+		model.setValueAt(u.getIdTipoDocumento(), table.getSelectedRow(), 3);
+		model.setValueAt(u.getDocumento(), table.getSelectedRow(), 4);
+		model.setValueAt(u.getArea(), table.getSelectedRow(), 5);
+		model.setValueAt(u.getCorreo(), table.getSelectedRow(), 6);
+		model.setValueAt(u.getTelefono(), table.getSelectedRow(), 7);
+		model.setValueAt(General.parsearDatetoString(u.getFechaIngreso()), table.getSelectedRow(), 8);
+		model.setValueAt(u.getEstado(), table.getSelectedRow(), 9);
+	}
+	
+	void fillTable(){
+		modelo.setRowCount(0);
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		for(int i = 0; i < usuarioController.size(); i++){
+			BE_Usuario u = usuarioController.getUsuario(i);
+			Object[] data = new Object[]{
+					u.getCodigo(), u.getNombre(), u.getApellido(),
+					u.getIdTipoDocumento(), u.getDocumento(), u.getArea(),
+					u.getCorreo(), u.getTelefono(), General.parsearDatetoString(u.getFechaIngreso()),
+					u.getEstado()
+			};
+			model.addRow(data);
+		}
+	}
+	void fillTablexArea(){
+		modelo.setRowCount(0);
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		int area = cboBArea.getSelectedIndex();
+		ArrayList<BE_Usuario> aux = usuarioController.listarUsuarioxArea(area);
+		for(int i=0; i< aux.size(); i++){
+			BE_Usuario u = aux.get(i);
+			Object[] data = new Object[]{
+					u.getCodigo(), u.getNombre(), u.getApellido(),
+					u.getIdTipoDocumento(), u.getDocumento(), u.getArea(),
+					u.getCorreo(), u.getTelefono(), General.parsearDatetoString(u.getFechaIngreso()),
+					u.getEstado()
+			};
+			model.addRow(data);
+		}
+		
+	}
+	
+	//EndRegion
+    
+	//Region Metodos para obtener data de los controles
+	int leerCodigo(){
+		return Integer.parseInt(txtCodigo.getText());
+	}
+	String leerNombre(){
+		return txtNombre.getText();
+	}
+	
+	String leerApellidos(){
+		return txtApellidos.getText();
+	}
+	
+	int leerComboTipoDocumento(){
+		return cboTipoDocumento.getSelectedIndex();
+	}
+	
+	String leerDocumento(){
+		return txtDNI.getText();
+	}
+	String leerCorreo(){
+		return txtCorreo.getText();
+	}
+	
+	int leerArea(){
+		return cboArea.getSelectedIndex();
+	}
+	
+	String leerTelefono(){
+		return txtTelefono.getText();
+	}
+	
+	int leerEstado(){
+		return cboEstado.getSelectedIndex();
+	}
+	
+	String leerFecha(){
+		Date fecha = dateChooser.getDate();
+		/*String dia = String.valueOf((dateChooser.getCalendar().get(Calendar.DAY_OF_MONTH)));
+		String mes = String.valueOf((dateChooser.getCalendar().get(Calendar.MONTH)));
+		String año =  String.valueOf((dateChooser.getCalendar().get(Calendar.YEAR)));*/
+		return General.parsearDatetoString(fecha);
+	}
+	
+	protected void habiltarBotones(boolean estado){
+		JButton[] botones = {btnLimpiar,btnEditar,btnEliminar,btnVolver};
+		General.habilitar(botones, estado);
+	}
+	
+	void setDataUsuario(BE_Usuario objUsuario){
+		objUsuario.setCodigo(leerCodigo());
+		objUsuario.setNombre(leerNombre());
+		objUsuario.setApellidos(leerApellidos());
+		objUsuario.setIdTipoDocumento(leerComboTipoDocumento());
+		objUsuario.setDocumento(leerDocumento());
+		objUsuario.setCorreo(leerCorreo());
+		objUsuario.setArea(leerArea());
+		objUsuario.setTelefono(leerTelefono());
+		objUsuario.setEstado(leerEstado());
+		objUsuario.setFechaIngreso(General.parseStringtoDate(leerFecha()));
+	}
+	//EndRegion
+	
 }
 

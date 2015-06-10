@@ -5,16 +5,14 @@ import java.awt.Container;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Properties;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
-import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 public class General {
@@ -73,20 +71,36 @@ public class General {
 			SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
 			parseDate = fmt.parse(fecha);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return parseDate;
 	}
 	
-	public static Boolean validateJTableisEmpty(int indexRow){
-		if(indexRow == -1){
-			//JOptionPane.showMessageDialog(null, "Debe seleccionar un registro");
+	public static Boolean validateJTableisEmpty(int rowcount, int r){
+		if(rowcount == 0 || r == -1){
+			JOptionPane.showMessageDialog(null, "Debe seleccionar un registro");
 			return true;
 		}
 		else 
 			return false;
 	}
+	/***
+	 * Cambia el indice del TabbedPane. Habilita/deshabilita el panel
+	 * @param tabbedPane Ingrese el TabbedPane que desea cambiar su estado
+	 * @param estado Ingrese True si el indice que desea que aparezca sera el 1. False si el indice que desea que aparezca sera el 0
+	 */
+	public static void changePanel(JTabbedPane tabbedPane,boolean estado) {
+		if(estado == true){
+			tabbedPane.setSelectedIndex(1);
+			tabbedPane.setEnabledAt(0, !estado);
+			tabbedPane.setEnabledAt(1, estado);
+		}else{
+			tabbedPane.setSelectedIndex(0);
+			tabbedPane.setEnabledAt(0, estado);
+			tabbedPane.setEnabledAt(1, !estado);
+		}
+	}
+
 	public static void cambiarTitulo(JButton[] button){
 		try {
 			for(JButton jb : button){
@@ -104,17 +118,19 @@ public class General {
         if (component instanceof JTextField) {
                 JTextField text = (JTextField) component;
                 text.setText("");
-        } else {
-                if (component instanceof Container) {
-                        for (Component c : ((Container) component).getComponents()) {
-                                limpiar(c);
-                        }
-                }
         }
+         
         if (component instanceof JComboBox){
         	JComboBox combo = (JComboBox) component;
         	combo.setSelectedIndex(0);
         }
+        
+        if (component instanceof Container){
+     	   for(Component c : ((Container) component).getComponents()){
+     		   limpiar(c);
+     	   }
+        }
+
 
 	}
 }
