@@ -114,7 +114,7 @@ public class TipoDocumento extends JInternalFrame implements ActionListener{
 				}
 				{
 					panelFiltro = new JPanel();
-					panelFiltro.setBounds(12, 12, 934, 57);
+					panelFiltro.setBounds(12, 12, 272, 57);
 					panelFiltro.setBorder(BorderFactory.createTitledBorder("Filtro de búsqueda"));
 					panelListado.add(panelFiltro);
 					panelFiltro.setLayout(null);
@@ -125,7 +125,7 @@ public class TipoDocumento extends JInternalFrame implements ActionListener{
 					}
 					{
 						txtBusquedaCodigo = new JTextField();
-						txtBusquedaCodigo.setBounds(84, 31, 105, 17);
+						txtBusquedaCodigo.setBounds(84, 25, 105, 24);
 						panelFiltro.add(txtBusquedaCodigo);
 						txtBusquedaCodigo.setColumns(10);
 						txtBusquedaCodigo.addActionListener(action);

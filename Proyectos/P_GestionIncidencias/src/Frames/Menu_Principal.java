@@ -12,24 +12,40 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import Utilitarios.General;
 
 import java.awt.Color;
-import javax.swing.ImageIcon;
-import java.awt.Toolkit;
-public class Menu_Principal extends JFrame implements ActionListener {
 
+import javax.swing.ImageIcon;
+
+import java.awt.Toolkit;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.Arrays;
+public class Menu_Principal extends JFrame implements ActionListener {
+	private JButton btnIngresar;
+	private JButton btnSalir;
+	private JTextField txtUsuario;
+	private JPasswordField txtContraseña;
 	private JPanel contentPane;
 	private JMenuBar menuBar;
 	private JMenu mnMantenimientos;
@@ -45,23 +61,20 @@ public class Menu_Principal extends JFrame implements ActionListener {
 	private JSeparator separator_1;
 	private JSeparator separator_2;
 	private JSeparator separator_3;
-
+	private JDialog dialogo;
+	
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		new SplashScreen(8000);
 		EventQueue.invokeLater(new Runnable() {
+			
 			public void run() {
 				try {
-					
 					Menu_Principal frame = new Menu_Principal();
-					frame.setVisible(true);
-					frame.setExtendedState(MAXIMIZED_BOTH);
+					frame.setVisible(false);
+					//frame.setExtendedState(MAXIMIZED_BOTH);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -73,7 +86,7 @@ public class Menu_Principal extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public Menu_Principal() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Menu_Principal.class.getResource("/imagenes_x24/Analytics_chart_symbol_24.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Menu_Principal.class.getResource("/imagenes_x32/logo.png")));
 		setForeground(Color.DARK_GRAY);
 		setTitle("Sistema de Gestion de Incidencias");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -138,6 +151,7 @@ public class Menu_Principal extends JFrame implements ActionListener {
 			}
 			{
 				mnReportes = new JMenu("Reportes");
+				mnReportes.setIcon(new ImageIcon(Menu_Principal.class.getResource("/imagenes_x24/report_x24.png")));
 				menuBar.add(mnReportes);
 			}
 		}
@@ -148,11 +162,56 @@ public class Menu_Principal extends JFrame implements ActionListener {
 		contentPane.setLayout(new BorderLayout(0,0));
 		{
 			desktopPane = new JDesktopPane();
-			desktopPane.setForeground(Color.DARK_GRAY);
+			desktopPane.setForeground(Color.lightGray);
 			desktopPane.setBounds(0, 0, 0, 0);
 			contentPane.add(desktopPane);
 		}
+		//Region Dialogo para Logeo
+			dialogo = new JDialog();
+			JPanel contentPane = new JPanel();
+			contentPane.setBounds(100,100, 400,150);
+			contentPane.setLayout(null);
+			dialogo.setContentPane(contentPane);
+			{
+				JLabel lblUsuario = new JLabel("Usuario:");
+				lblUsuario.setBounds(20,14,70,15);
+				contentPane.add(lblUsuario);
+			}
+			{
+				txtUsuario = new JTextField("");
+				txtUsuario.setBounds(103, 12, 150, 24);
+				contentPane.add(txtUsuario);
+			}
+			{
+				JLabel lblContraseña = new JLabel("Contraseña:");
+				lblContraseña.setBounds(20,48, 98,15);
+				contentPane.add(lblContraseña);
+			}
+			{
+			    txtContraseña = new JPasswordField();
+				txtContraseña.setBounds(120,44, 150,24);
+				contentPane.add(txtContraseña);
+			}
+			{
+				btnIngresar = new JButton("Ingresar");
+				btnIngresar.setBounds(276,11,112,24);
+				btnIngresar.addActionListener(this);
+				contentPane.add(btnIngresar);
+			}
+			{
+				btnSalir = new JButton("Salir");
+				btnSalir.setBounds(304, 48, 75, 24);
+				btnSalir.addActionListener(this);
+				contentPane.add(btnSalir);
+			}
+			dialogo.setVisible(true);
+			dialogo.setTitle("Login");
+			dialogo.setBounds(100,100, 400,108);
+			dialogo.setLocationRelativeTo(null);
+		
+		//EndRegion
 	}
+	
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == mntmEspecialista) {
 			do_mntmEspecialista_actionPerformed(e);
@@ -169,15 +228,29 @@ public class Menu_Principal extends JFrame implements ActionListener {
 		if (e.getSource() == mntmUsuarios) {
 			do_mntmUsuarios_actionPerformed(e);
 		}
+		if (e.getSource() == btnIngresar) {
+			do_btnIngresar_performed(e);
+		}
+		if (e.getSource() == btnSalir) {
+			do_btnSalir_actionPerformed(e);
+		}
 	}
+	
+	private void do_btnSalir_actionPerformed(ActionEvent e) {
+		JOptionPane.showMessageDialog(null, "Hola");
+		System.exit(0);
+	}
+
 	protected void do_mntmUsuarios_actionPerformed(ActionEvent e) {
 		Usuario objUsuario = Usuario.getInstance();
 		General.addIFrame(desktopPane, objUsuario);
 	}
+
 	protected void do_mntmNewMenuItem_actionPerformed(ActionEvent e) {
 		Area objArea = Area.getInstance();
 		General.addIFrame(desktopPane, objArea);
 	}
+	
 	protected void do_mntmTipoDocumentotem_actionPerformed(ActionEvent e) {
 		TipoDocumento objTipoDocumento = TipoDocumento.getInstance();
 		General.addIFrame(desktopPane, objTipoDocumento);
@@ -190,4 +263,40 @@ public class Menu_Principal extends JFrame implements ActionListener {
 		Especialista objEspecialista = Especialista.getInstance();
 		General.addIFrame(desktopPane, objEspecialista);
 	}
+	
+	private void do_btnIngresar_performed(ActionEvent e) {
+		String data[] = getData();
+		String user = data[0], userLogeado = txtUsuario.getText();
+		char[] pass = data[1].toCharArray();
+		char[] passLogeado = txtContraseña.getPassword();
+		
+		if(user.equals(userLogeado) && Arrays.equals(pass, passLogeado)){
+			JOptionPane.showMessageDialog(null, "Acceso exitoso");
+			dialogo.setVisible(false);
+			this.setVisible(true);
+			this.setExtendedState(MAXIMIZED_BOTH);
+		}else
+			JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrecta");
+	}
+	
+	String[] getData(){
+		String [] data= null;
+		try {
+			BufferedReader br = new BufferedReader(new FileReader("users.txt"));
+			String user, pass, s[], linea;
+			while((linea = br.readLine()) != null){
+				s = linea.split(",");
+				user = s[0];
+				pass = s[1];
+				data = new String[]{
+					user, pass	
+				};
+			}
+			br.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return data;
+	}
+
 }

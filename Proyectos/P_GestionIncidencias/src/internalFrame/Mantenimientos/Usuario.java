@@ -125,7 +125,7 @@ public class Usuario extends JInternalFrame implements ActionListener{
 				}
 				{
 					panelFiltro = new JPanel();
-					panelFiltro.setBounds(12, 12, 934, 57);
+					panelFiltro.setBounds(12, 12, 470, 57);
 					panelFiltro.setBorder(BorderFactory.createTitledBorder("Filtro de búsqueda"));
 					panelListado.add(panelFiltro);
 					panelFiltro.setLayout(null);
@@ -182,9 +182,7 @@ public class Usuario extends JInternalFrame implements ActionListener{
 					{
 						cboBArea = new JComboBox();
 						cboBArea.setBounds(254, 27, 130, 24);
-						cboBArea.setModel(new DefaultComboBoxModel(new String[]{
-								"Sistemas","Tu vieja"
-						}));
+						cboBArea.setModel(new DefaultComboBoxModel(areaController.lista()));
 						panelFiltro.add(cboBArea);
 						cboBArea.addActionListener(new ActionListener() {
 							

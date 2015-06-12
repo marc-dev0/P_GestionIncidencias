@@ -3,8 +3,7 @@ package internalFrame.Mantenimientos;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.naming.LimitExceededException;
+import java.awt.event.WindowEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -24,14 +23,9 @@ import javax.swing.Box.Filler;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
-
 import Utilitarios.General;
-
-import com.toedter.calendar.JDateChooser;
-
 import Controlador.AreaController;
 import Entidades.BE_Area;
-import Entidades.BE_Usuario;
 import javax.swing.JTextArea;
 import javax.swing.ImageIcon;
 
@@ -83,7 +77,7 @@ public class Area extends JInternalFrame implements ActionListener{
 		setTitle("Area");
 		setBounds(100, 100, 1300, 372);
 		getContentPane().setLayout(null);
-		
+	
 		{
 			tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 			tabbedPane.setBounds(0, 0, 1158, 335);
@@ -122,7 +116,7 @@ public class Area extends JInternalFrame implements ActionListener{
 				}
 				{
 					panelFiltro = new JPanel();
-					panelFiltro.setBounds(12, 12, 934, 57);
+					panelFiltro.setBounds(12, 12, 272, 57);
 					panelFiltro.setBorder(BorderFactory.createTitledBorder("Filtro de búsqueda"));
 					panelListado.add(panelFiltro);
 					panelFiltro.setLayout(null);
@@ -133,7 +127,7 @@ public class Area extends JInternalFrame implements ActionListener{
 					}
 					{
 						txtBusquedaCodigo = new JTextField();
-						txtBusquedaCodigo.setBounds(84, 31, 105, 17);
+						txtBusquedaCodigo.setBounds(84, 25, 105, 24);
 						panelFiltro.add(txtBusquedaCodigo);
 						txtBusquedaCodigo.setColumns(10);
 						txtBusquedaCodigo.addActionListener(action);
@@ -372,7 +366,7 @@ public class Area extends JInternalFrame implements ActionListener{
 	protected void do_btnLimpiar_actionPerformed(ActionEvent e) {
 		General.limpiar(panelMantenimiento);
 	}
-		
+	
 	protected void do_btnSalir_actionPerformed(ActionEvent e) {
 		this.dispose();
 		
@@ -450,7 +444,11 @@ public class Area extends JInternalFrame implements ActionListener{
 			}
 		};
 	
-	
+	protected void windowsevent(WindowEvent ev){
+		if(ev.WINDOW_CLOSED == 202){
+			JOptionPane.showMessageDialog(null, "Hola");
+		}
+	}
 	protected void habiltarBotones(boolean estado){
 		JButton[] botones = {btnLimpiar,btnEditar,btnEliminar,btnVolver};
 		General.habilitar(botones, estado);

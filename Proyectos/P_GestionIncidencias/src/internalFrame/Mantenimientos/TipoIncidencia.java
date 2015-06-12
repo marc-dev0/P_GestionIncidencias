@@ -125,7 +125,7 @@ public class TipoIncidencia extends JInternalFrame implements ActionListener{
 					}
 					{
 						txtBusquedaCodigo = new JTextField();
-						txtBusquedaCodigo.setBounds(84, 31, 105, 17);
+						txtBusquedaCodigo.setBounds(84, 25, 105, 24);
 						panelFiltro.add(txtBusquedaCodigo);
 						txtBusquedaCodigo.setColumns(10);
 						txtBusquedaCodigo.addActionListener(action);

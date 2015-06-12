@@ -9,7 +9,6 @@ import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Date;
 
 import Utilitarios.General;
