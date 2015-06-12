@@ -3,10 +3,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
-import javax.swing.JOptionPane;
-
 import Entidades.BE_Usuario;
 public class UsuarioController {
 	
@@ -23,12 +19,12 @@ public class UsuarioController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		registrarUsuario(new BE_Usuario(1, "Miguel", "Rojas Coraje", 1, "DNI", 1, "m.rojascoraje@outlook.com", "930632387", fechar,1));
-		registrarUsuario(new BE_Usuario(2, "Miguel", "Rojas Coraje", 1, "DNI", 1, "m.rojascoraje@outlook.com", "930632387", fechar,1));
-		registrarUsuario(new BE_Usuario(3, "Miguel", "Rojas Coraje", 1, "DNI", 1, "m.rojascoraje@outlook.com", "930632387", fechar,1));
-		registrarUsuario(new BE_Usuario(4, "Miguel", "Rojas Coraje", 1, "DNI", 1, "m.rojascoraje@outlook.com", "930632387", fechar,1));
-		registrarUsuario(new BE_Usuario(5, "Miguel", "Rojas Coraje", 1, "DNI", 1, "m.rojascoraje@outlook.com", "930632387", fechar,1));
-		registrarUsuario(new BE_Usuario(6, "Miguel", "Rojas Coraje", 1, "DNI", 1, "m.rojascoraje@outlook.com", "930632387", fechar,1));
+		registrarUsuario(new BE_Usuario(1, "Miguel", "Rojas Coraje", 1, "DNI", 0, "m.rojascoraje@outlook.com", "930632387", fechar,1));
+		registrarUsuario(new BE_Usuario(2, "Miguel", "Rojas Coraje", 1, "DNI", 2, "m.rojascoraje@outlook.com", "930632387", fechar,1));
+		registrarUsuario(new BE_Usuario(3, "Miguel", "Rojas Coraje", 1, "DNI", 3, "m.rojascoraje@outlook.com", "930632387", fechar,1));
+		registrarUsuario(new BE_Usuario(4, "Miguel", "Rojas Coraje", 1, "DNI", 4, "m.rojascoraje@outlook.com", "930632387", fechar,1));
+		registrarUsuario(new BE_Usuario(5, "Miguel", "Rojas Coraje", 1, "DNI", 4, "m.rojascoraje@outlook.com", "930632387", fechar,1));
+		registrarUsuario(new BE_Usuario(6, "Miguel", "Rojas Coraje", 1, "DNI", 2, "m.rojascoraje@outlook.com", "930632387", fechar,1));
 		registrarUsuario(new BE_Usuario(7, "Miguel", "Rojas Coraje", 1, "DNI", 1, "m.rojascoraje@outlook.com", "930632387", fechar,1));
 	}
 	

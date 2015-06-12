@@ -1,5 +1,9 @@
 package Frames;
 
+import internalFrame.Mantenimientos.Area;
+import internalFrame.Mantenimientos.Especialista;
+import internalFrame.Mantenimientos.TipoDocumento;
+import internalFrame.Mantenimientos.TipoIncidencia;
 import internalFrame.Mantenimientos.Usuario;
 
 import java.awt.BorderLayout;
@@ -22,6 +26,7 @@ import java.awt.event.ActionEvent;
 import Utilitarios.General;
 
 import java.awt.Color;
+import javax.swing.ImageIcon;
 public class Menu_Principal extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
@@ -44,11 +49,11 @@ public class Menu_Principal extends JFrame implements ActionListener {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		//try {
-		//	UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		//} catch (Throwable e) {
-		//	e.printStackTrace();
-		//}
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -76,9 +81,11 @@ public class Menu_Principal extends JFrame implements ActionListener {
 			setJMenuBar(menuBar);
 			{
 				mnMantenimientos = new JMenu("Mantenimientos");
+				mnMantenimientos.setIcon(new ImageIcon(Menu_Principal.class.getResource("/imagenes_x32/maintenance_32.png")));
 				menuBar.add(mnMantenimientos);
 				{
 					mntmUsuarios = new JMenuItem("Usuarios");
+					mntmUsuarios.setIcon(new ImageIcon(Menu_Principal.class.getResource("/imagenes_x24/usuario_x24.png")));
 					mntmUsuarios.addActionListener(this);
 					mnMantenimientos.add(mntmUsuarios);
 				}
@@ -88,6 +95,8 @@ public class Menu_Principal extends JFrame implements ActionListener {
 				}
 				{
 					mntmNewMenuItem = new JMenuItem("Áreas");
+					mntmNewMenuItem.setIcon(new ImageIcon(Menu_Principal.class.getResource("/imagenes_x24/area_x24.png")));
+					mntmNewMenuItem.addActionListener(this);
 					mnMantenimientos.add(mntmNewMenuItem);
 				}
 				{
@@ -96,6 +105,8 @@ public class Menu_Principal extends JFrame implements ActionListener {
 				}
 				{
 					mntmTipoIncidencia = new JMenuItem("Tipo Incidencia");
+					mntmTipoIncidencia.setIcon(new ImageIcon(Menu_Principal.class.getResource("/imagenes_x24/incidencia_x24.png")));
+					mntmTipoIncidencia.addActionListener(this);
 					mnMantenimientos.add(mntmTipoIncidencia);
 				}
 				{
@@ -104,6 +115,8 @@ public class Menu_Principal extends JFrame implements ActionListener {
 				}
 				{
 					mntmTipoDocumentotem = new JMenuItem("Tipo Documento");
+					mntmTipoDocumentotem.setIcon(new ImageIcon(Menu_Principal.class.getResource("/imagenes_x24/documento_x24.png")));
+					mntmTipoDocumentotem.addActionListener(this);
 					mnMantenimientos.add(mntmTipoDocumentotem);
 				}
 				{
@@ -112,6 +125,8 @@ public class Menu_Principal extends JFrame implements ActionListener {
 				}
 				{
 					mntmEspecialista = new JMenuItem("Especialista");
+					mntmEspecialista.setIcon(new ImageIcon(Menu_Principal.class.getResource("/imagenes_x24/especialista_x24.png")));
+					mntmEspecialista.addActionListener(this);
 					mnMantenimientos.add(mntmEspecialista);
 				}
 			}
@@ -137,6 +152,18 @@ public class Menu_Principal extends JFrame implements ActionListener {
 		}
 	}
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == mntmEspecialista) {
+			do_mntmEspecialista_actionPerformed(e);
+		}
+		if (e.getSource() == mntmTipoIncidencia) {
+			do_mntmTipoIncidencia_actionPerformed(e);
+		}
+		if (e.getSource() == mntmTipoDocumentotem) {
+			do_mntmTipoDocumentotem_actionPerformed(e);
+		}
+		if (e.getSource() == mntmNewMenuItem) {
+			do_mntmNewMenuItem_actionPerformed(e);
+		}
 		if (e.getSource() == mntmUsuarios) {
 			do_mntmUsuarios_actionPerformed(e);
 		}
@@ -144,5 +171,21 @@ public class Menu_Principal extends JFrame implements ActionListener {
 	protected void do_mntmUsuarios_actionPerformed(ActionEvent e) {
 		Usuario objUsuario = Usuario.getInstance();
 		General.addIFrame(desktopPane, objUsuario);
+	}
+	protected void do_mntmNewMenuItem_actionPerformed(ActionEvent e) {
+		Area objArea = Area.getInstance();
+		General.addIFrame(desktopPane, objArea);
+	}
+	protected void do_mntmTipoDocumentotem_actionPerformed(ActionEvent e) {
+		TipoDocumento objTipoDocumento = TipoDocumento.getInstance();
+		General.addIFrame(desktopPane, objTipoDocumento);
+	}
+	protected void do_mntmTipoIncidencia_actionPerformed(ActionEvent e) {
+		TipoIncidencia objTipoIncidencia = TipoIncidencia.getInstance();
+		General.addIFrame(desktopPane, objTipoIncidencia);
+	}
+	protected void do_mntmEspecialista_actionPerformed(ActionEvent e) {
+		Especialista objEspecialista = Especialista.getInstance();
+		General.addIFrame(desktopPane, objEspecialista);
 	}
 }

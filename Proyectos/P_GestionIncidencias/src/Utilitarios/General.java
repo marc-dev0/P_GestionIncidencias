@@ -20,19 +20,16 @@ public class General {
 		boolean flag = false;
 		
 		try {
-			//jif.setSelected(false);
 			JInternalFrame[] children = jdp.getAllFrames();
 			
 			for(JInternalFrame j : children){
 				if(j.getTitle() == jif.getTitle()){
 					flag = true;
-					//jif.setSelected(true);
 					break;
 				}
 			}
 			if(flag == false)
 				jdp.add(jif);
-			//if(jif.isSelected()==false)
 				
 			jif.setVisible(true);
 			jif.setLocation(0,0);
@@ -76,8 +73,8 @@ public class General {
 		return parseDate;
 	}
 	
-	public static Boolean validateJTableisEmpty(int rowcount, int r){
-		if(rowcount == 0 || r == -1){
+	public static Boolean validateJTableisEmpty(int rowcount, int rowSelected){
+		if(rowcount == 0 || rowSelected == -1){
 			JOptionPane.showMessageDialog(null, "Debe seleccionar un registro");
 			return true;
 		}
@@ -96,8 +93,8 @@ public class General {
 			tabbedPane.setEnabledAt(1, estado);
 		}else{
 			tabbedPane.setSelectedIndex(0);
-			tabbedPane.setEnabledAt(0, estado);
-			tabbedPane.setEnabledAt(1, !estado);
+			tabbedPane.setEnabledAt(0, !estado);
+			tabbedPane.setEnabledAt(1, estado);
 		}
 	}
 

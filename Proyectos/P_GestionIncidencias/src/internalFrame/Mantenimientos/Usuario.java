@@ -1,20 +1,14 @@
 package internalFrame.Mantenimientos;
 
+
+import Controlador.AreaController; 
 import Controlador.UsuarioController;
 import Entidades.BE_Usuario;
 
 import java.awt.EventQueue;
 import java.awt.event.ActionListener;
-import java.text.DateFormat;
-import java.text.Format;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Properties;
-
-import Utilitarios.DateLabelFormatter;
 import Utilitarios.General;
 
 import javax.swing.AbstractAction;
@@ -32,25 +26,19 @@ import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.plaf.ListUI;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import javax.swing.JScrollPane;
 
 import java.awt.event.ActionEvent;
 
 import com.toedter.calendar.JDateChooser;
-import com.toedter.calendar.JCalendar;
 
 import javax.swing.JRadioButton;
-
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyListener;
-import java.awt.event.KeyEvent;
+import javax.swing.ImageIcon;
 
 public class Usuario extends JInternalFrame implements ActionListener{
 	private static Usuario instance =  null;
+	private AreaController areaController = new AreaController();
 	public static Usuario getInstance(){
 		if(instance==null){
 			instance = new Usuario();
@@ -93,8 +81,10 @@ public class Usuario extends JInternalFrame implements ActionListener{
 	}
 
 	private Usuario() {
+		setFrameIcon(new ImageIcon(Usuario.class.getResource("/imagenes_x16/usuario_16.png")));
+		
 		setClosable(true);
-		setTitle("Usuarios");
+		setTitle("Usuario");
 		setBounds(100, 100, 1300, 404);
 		getContentPane().setLayout(null);
 		
@@ -268,9 +258,13 @@ public class Usuario extends JInternalFrame implements ActionListener{
 					panelMantenimiento.add(lblarea);
 				}
 				{
+					
 					cboTipoDocumento = new JComboBox();
-					cboTipoDocumento.setModel(new DefaultComboBoxModel(new String[] {"DNI", "PASAPORTE", "CARNET DE EXTRANJERIA"}));
-					cboTipoDocumento.setBounds(136, 101, 201, 24);
+					cboTipoDocumento.setModel(new DefaultComboBoxModel(new String[] {"DNI", "CARNET DE EXTRANJERIA"}));
+					
+					//cboTipoDocumento.setModel(new DefaultComboBoxModel(areaController.lista());
+					//cboTipoDocumento.setModel(new DefaultComboBoxModel(vectorArea.toArray()));
+					cboTipoDocumento.setBounds(136, 101, 300, 24);
 					panelMantenimiento.add(cboTipoDocumento);
 				}
 				{
@@ -300,7 +294,6 @@ public class Usuario extends JInternalFrame implements ActionListener{
 				}
 				{
 					cboArea = new JComboBox();
-					cboArea.setModel(new DefaultComboBoxModel(new String[] {"RRHHH", "SISTEMAS", "MARKETING", "VENTAS", "COMPRAS"}));
 					cboArea.setBounds(61, 163, 196, 24);
 					panelMantenimiento.add(cboArea);
 				}
@@ -408,6 +401,9 @@ public class Usuario extends JInternalFrame implements ActionListener{
 				int codigo = usuarioController.generarCodigo();
 				txtCodigo.setText(""+ codigo);
 				estado = "Guardar";
+				for(String s : areaController.lista()){
+					cboArea.addItem(s);
+				}
 			}
 			else if(tabbedPane.getSelectedIndex() == 1){
 				
@@ -422,6 +418,7 @@ public class Usuario extends JInternalFrame implements ActionListener{
 				estado ="";
 				}
 				else if(estado == "Editar"){
+					
 					int codigo = Integer.parseInt(txtCodigo.getText());
 					BE_Usuario u = usuarioController.getUsuarioxCodigo(codigo);
 					int pos = usuarioController.getPosUsuario(u);
@@ -441,7 +438,8 @@ public class Usuario extends JInternalFrame implements ActionListener{
 		}
 		
 	}
-	
+
+
 	protected void do_btnLimpiar_actionPerformed(ActionEvent e) {
 		General.limpiar(panelMantenimiento);
 		txtCodigo.requestFocus();
@@ -487,7 +485,7 @@ public class Usuario extends JInternalFrame implements ActionListener{
 				carryDataToControls(r);
 				General.changePanel(tabbedPane, true);
 				habiltarBotones(true);
-				txtCodigo.requestFocus();
+				txtNombre.requestFocus();
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -505,7 +503,6 @@ public class Usuario extends JInternalFrame implements ActionListener{
 				fillTable();
 				return;
 			}
-		
 		}
 	}
 	
@@ -582,6 +579,7 @@ public class Usuario extends JInternalFrame implements ActionListener{
 			model.addRow(data);
 		}
 	}
+	
 	void fillTablexArea(){
 		modelo.setRowCount(0);
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
