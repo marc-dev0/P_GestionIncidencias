@@ -8,7 +8,9 @@ import internalFrame.Mantenimientos.Usuario;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Image;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -40,6 +42,7 @@ import javax.swing.ImageIcon;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 public class Menu_Principal extends JFrame implements ActionListener {
 	private JButton btnIngresar;
@@ -62,6 +65,13 @@ public class Menu_Principal extends JFrame implements ActionListener {
 	private JSeparator separator_2;
 	private JSeparator separator_3;
 	private JDialog dialogo;
+	private JMenuItem mntmIngreso;
+	private JMenuItem mntmListado;
+	private JMenuItem mntmActualizacin;
+	private JMenuItem mntmIncidenciasPor;
+	private JMenuItem mntmIncidenciasPorTipo;
+	private JMenuItem mntmIncidenciasPorRango;
+	private JMenuItem mntmIncidenciasPorDemora;
 	
 	/**
 	 * Launch the application.
@@ -96,7 +106,7 @@ public class Menu_Principal extends JFrame implements ActionListener {
 			setJMenuBar(menuBar);
 			{
 				mnMantenimientos = new JMenu("Mantenimientos");
-				mnMantenimientos.setIcon(new ImageIcon(Menu_Principal.class.getResource("/imagenes_x32/maintenance_32.png")));
+				mnMantenimientos.setIcon(new ImageIcon(Menu_Principal.class.getResource("/imagenes_x24/manteinance_x24.png")));
 				menuBar.add(mnMantenimientos);
 				{
 					mntmUsuarios = new JMenuItem("Usuarios");
@@ -147,12 +157,41 @@ public class Menu_Principal extends JFrame implements ActionListener {
 			}
 			{
 				mnNewMenu = new JMenu("Atención de Incidencias");
+				mnNewMenu.setIcon(new ImageIcon(Menu_Principal.class.getResource("/imagenes_x24/atencion_incidencias_x24.png")));
 				menuBar.add(mnNewMenu);
+				{
+					mntmIngreso = new JMenuItem("Ingreso");
+					mnNewMenu.add(mntmIngreso);
+				}
+				{
+					mntmListado = new JMenuItem("Listado");
+					mnNewMenu.add(mntmListado);
+				}
+				{
+					mntmActualizacin = new JMenuItem("Actualización");
+					mnNewMenu.add(mntmActualizacin);
+				}
 			}
 			{
 				mnReportes = new JMenu("Reportes");
-				mnReportes.setIcon(new ImageIcon(Menu_Principal.class.getResource("/imagenes_x24/report_x24.png")));
+				mnReportes.setIcon(new ImageIcon(Menu_Principal.class.getResource("/imagenes_x24/report2_x24.png")));
 				menuBar.add(mnReportes);
+				{
+					mntmIncidenciasPor = new JMenuItem("Incidencias por Area");
+					mnReportes.add(mntmIncidenciasPor);
+				}
+				{
+					mntmIncidenciasPorTipo = new JMenuItem("Incidencias por Tipo");
+					mnReportes.add(mntmIncidenciasPorTipo);
+				}
+				{
+					mntmIncidenciasPorRango = new JMenuItem("Incidencias por Rango de Fechas");
+					mnReportes.add(mntmIncidenciasPorRango);
+				}
+				{
+					mntmIncidenciasPorDemora = new JMenuItem("Incidencias por demora en atención");
+					mnReportes.add(mntmIncidenciasPorDemora);
+				}
 			}
 		}
 		contentPane = new JPanel();
@@ -162,14 +201,14 @@ public class Menu_Principal extends JFrame implements ActionListener {
 		contentPane.setLayout(new BorderLayout(0,0));
 		{
 			desktopPane = new JDesktopPane();
-			desktopPane.setForeground(Color.lightGray);
+			desktopPane.setBackground(Color.gray);
 			desktopPane.setBounds(0, 0, 0, 0);
 			contentPane.add(desktopPane);
 		}
 		//Region Dialogo para Logeo
 			dialogo = new JDialog();
 			JPanel contentPane = new JPanel();
-			contentPane.setBounds(100,100, 400,150);
+			contentPane.setBounds(100,100, 400,108);
 			contentPane.setLayout(null);
 			dialogo.setContentPane(contentPane);
 			{
@@ -206,7 +245,13 @@ public class Menu_Principal extends JFrame implements ActionListener {
 			}
 			dialogo.setVisible(true);
 			dialogo.setTitle("Login");
-			dialogo.setBounds(100,100, 400,108);
+			dialogo.setBounds(100,100, 400,108); 
+			try {
+				dialogo.getContentPane().add(new JLabel(new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/imagenesx16/Loqin_x16.png")))));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			dialogo.setLocationRelativeTo(null);
 		
 		//EndRegion
@@ -298,5 +343,4 @@ public class Menu_Principal extends JFrame implements ActionListener {
 		}
 		return data;
 	}
-
 }
