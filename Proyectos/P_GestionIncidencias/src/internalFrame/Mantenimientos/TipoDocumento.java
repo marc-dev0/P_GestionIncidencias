@@ -70,7 +70,7 @@ public class TipoDocumento extends JInternalFrame implements ActionListener{
 	 * Create the frame.
 	 */
 	public TipoDocumento() {
-		setFrameIcon(new ImageIcon(TipoDocumento.class.getResource("/imagenes_x16/documento_16.png")));
+		setFrameIcon(new ImageIcon(TipoDocumento.class.getResource("/imagenesx16/documento_16.png")));
 		setClosable(true);
 		setTitle("Tipo Documento");
 		setBounds(100, 100, 1300, 404);

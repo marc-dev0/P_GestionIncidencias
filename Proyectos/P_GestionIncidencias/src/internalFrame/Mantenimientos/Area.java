@@ -78,7 +78,7 @@ public class Area extends JInternalFrame implements ActionListener{
 	 * Create the frame.
 	 */
 	public Area() {
-		setFrameIcon(new ImageIcon(Area.class.getResource("/imagenes_x16/area_16.png")));
+		setFrameIcon(new ImageIcon(Area.class.getResource("/imagenesx16/area_16.png")));
 		setClosable(true);
 		setTitle("Area");
 		setBounds(100, 100, 1300, 372);

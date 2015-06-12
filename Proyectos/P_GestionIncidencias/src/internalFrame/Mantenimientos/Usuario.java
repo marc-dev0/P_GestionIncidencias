@@ -81,7 +81,7 @@ public class Usuario extends JInternalFrame implements ActionListener{
 	}
 
 	private Usuario() {
-		setFrameIcon(new ImageIcon(Usuario.class.getResource("/imagenes_x16/usuario_16.png")));
+		setFrameIcon(new ImageIcon(Usuario.class.getResource("/imagenesx16/user_16.png")));
 		
 		setClosable(true);
 		setTitle("Usuario");
@@ -131,12 +131,12 @@ public class Usuario extends JInternalFrame implements ActionListener{
 					panelFiltro.setLayout(null);
 					{
 						lblBCodigo = new JLabel("Código:");
-						lblBCodigo.setBounds(12, 32, 70, 15);
+						lblBCodigo.setBounds(12, 32, 63, 15);
 						panelFiltro.add(lblBCodigo);
 					}
 					{
 						txtBusquedaCodigo = new JTextField();
-						txtBusquedaCodigo.setBounds(84, 31, 105, 17);
+						txtBusquedaCodigo.setBounds(84, 25, 105, 24);
 						panelFiltro.add(txtBusquedaCodigo);
 						txtBusquedaCodigo.setColumns(10);
 						txtBusquedaCodigo.addActionListener(action);
@@ -170,7 +170,7 @@ public class Usuario extends JInternalFrame implements ActionListener{
 					{
 						rdbTodos = new JRadioButton("Todos");
 						rdbTodos.addActionListener(this);
-						rdbTodos.setBounds(739, 23, 70, 23);
+						rdbTodos.setBounds(395, 28, 70, 23);
 						panelFiltro.add(rdbTodos);
 						
 					}

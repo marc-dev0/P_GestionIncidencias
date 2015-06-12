@@ -70,7 +70,7 @@ public class TipoIncidencia extends JInternalFrame implements ActionListener{
 	 * Create the frame.
 	 */
 	public TipoIncidencia() {
-		setFrameIcon(new ImageIcon(TipoIncidencia.class.getResource("/imagenes_x16/incidencia_16.png")));
+		setFrameIcon(new ImageIcon(TipoIncidencia.class.getResource("/imagenesx16/incidencia_16.png")));
 		setClosable(true);
 		setTitle("Tipo Incidencia");
 		setBounds(100, 100, 1300, 358);

@@ -27,6 +27,7 @@ import Utilitarios.General;
 
 import java.awt.Color;
 import javax.swing.ImageIcon;
+import java.awt.Toolkit;
 public class Menu_Principal extends JFrame implements ActionListener {
 
 	private JPanel contentPane;
@@ -72,6 +73,7 @@ public class Menu_Principal extends JFrame implements ActionListener {
 	 * Create the frame.
 	 */
 	public Menu_Principal() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Menu_Principal.class.getResource("/imagenes_x24/Analytics_chart_symbol_24.png")));
 		setForeground(Color.DARK_GRAY);
 		setTitle("Sistema de Gestion de Incidencias");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

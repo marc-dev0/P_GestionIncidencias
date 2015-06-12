@@ -85,7 +85,7 @@ public class Especialista extends JInternalFrame implements ActionListener{
 
 	private Especialista() {
 		
-		setFrameIcon(new ImageIcon(Especialista.class.getResource("/imagenes_x16/especialista_16x16.png")));
+		setFrameIcon(new ImageIcon(Especialista.class.getResource("/imagenesx16/especialista_16x16.png")));
 		setClosable(true);
 		setTitle("Especialista");
 		setBounds(100, 100, 1300, 404);
