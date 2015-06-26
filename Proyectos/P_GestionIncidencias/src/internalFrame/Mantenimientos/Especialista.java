@@ -121,6 +121,8 @@ public class Especialista extends JInternalFrame implements ActionListener{
 						table.getColumnModel().getColumn(3).setMaxWidth(0);*/
 						table.getColumnModel().getColumn(6).setMinWidth(0);
 						table.getColumnModel().getColumn(6).setMaxWidth(0);
+						table.getTableHeader().setReorderingAllowed(false);
+						table.getTableHeader().setResizingAllowed(false);
 						scrollPane.setViewportView(table);
 					    
 					}
@@ -266,7 +268,7 @@ public class Especialista extends JInternalFrame implements ActionListener{
 					panelMantenimiento.add(lblFechaDeIngreso);
 				}
 				{
-					dateChooser = new JDateChooser();
+					dateChooser = new JDateChooser(new Date());
 					dateChooser.setBounds(146, 172, 155, 24);
 					panelMantenimiento.add(dateChooser);
 				}
@@ -377,9 +379,10 @@ public class Especialista extends JInternalFrame implements ActionListener{
 			else if(tabbedPane.getSelectedIndex() == 1){
 				
 				if (estado == "Guardar"){
-				BE_Especialista objEspecialista = new BE_Especialista();
-				EspecialistaController.registrarEspecialista(objEspecialista);
-				setDataEspecialista(objEspecialista);
+				BE_Especialista ep = new BE_Especialista();
+				setDataEspecialista(ep);
+				EspecialistaController.registrarEspecialista(ep);
+				EspecialistaController.guardarEspecialista(ep);
 				addRowInserted();
 				General.changePanel(tabbedPane, false);
 				habiltarBotones(true);
@@ -393,6 +396,7 @@ public class Especialista extends JInternalFrame implements ActionListener{
 					int pos = EspecialistaController.getPosEspecialista(u);
 					setDataEspecialista(u);
 					EspecialistaController.modificarEspecialista(pos, u);
+					EspecialistaController.guardarEspecialista();
 					editRowSelected(u);
 					General.changePanel(tabbedPane, false);
 					General.limpiar(panelMantenimiento);
@@ -407,7 +411,6 @@ public class Especialista extends JInternalFrame implements ActionListener{
 		}
 		
 	}
-
 
 	protected void do_btnLimpiar_actionPerformed(ActionEvent e) {
 		General.limpiar(panelMantenimiento);
@@ -539,24 +542,6 @@ public class Especialista extends JInternalFrame implements ActionListener{
 			model.addRow(data);
 		}
 	}
-	
-	/*void fillTablexArea(){
-		modelo.setRowCount(0);
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		int area = cboBArea.getSelectedIndex();
-		ArrayList<BE_Especialista> aux = EspecialistaController.listarEspecialistaxArea(area);
-		for(int i=0; i< aux.size(); i++){
-			BE_Especialista u = aux.get(i);
-			Object[] data = new Object[]{
-					u.getCodigo(), u.getNombre(), u.getApellido(),
-					u.getIdTipoDocumento(), u.getDocumento(), u.getArea(),
-					u.getCorreo(), u.getTelefono(), General.parsearDatetoString(u.getFechaIngreso()),
-					u.getEstado()
-			};
-			model.addRow(data);
-		}
-		
-	}*/
 	
 	//EndRegion
     

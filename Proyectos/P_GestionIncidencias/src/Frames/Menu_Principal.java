@@ -1,7 +1,9 @@
 package Frames;
 
+import internalFrame.Incidencias.Incidencias;
 import internalFrame.Mantenimientos.Area;
 import internalFrame.Mantenimientos.Especialista;
+import internalFrame.Mantenimientos.Incidencia;
 import internalFrame.Mantenimientos.TipoDocumento;
 import internalFrame.Mantenimientos.TipoIncidencia;
 import internalFrame.Mantenimientos.Usuario;
@@ -41,49 +43,39 @@ import javax.swing.ImageIcon;
 
 import java.awt.Toolkit;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 public class Menu_Principal extends JFrame implements ActionListener {
-	private JButton btnIngresar;
-	private JButton btnSalir;
+	
+	//Region Controles
+	private JButton btnIngresar, btnSalir;
 	private JTextField txtUsuario;
 	private JPasswordField txtContraseña;
 	private JPanel contentPane;
 	private JMenuBar menuBar;
-	private JMenu mnMantenimientos;
-	private JDesktopPane desktopPane;
-	private JMenuItem mntmUsuarios;
-	private JMenu mnNewMenu;
-	private JMenu mnReportes;
-	private JMenuItem mntmNewMenuItem;
-	private JSeparator separator;
-	private JMenuItem mntmTipoIncidencia;
-	private JMenuItem mntmTipoDocumentotem;
-	private JMenuItem mntmEspecialista;
-	private JSeparator separator_1;
-	private JSeparator separator_2;
-	private JSeparator separator_3;
+	public static JDesktopPane desktopPane;
+	private JMenu mnNewMenu, mnReportes, mnMantenimientos;
+	private JSeparator separator, separator_1, separator_2, separator_3;
 	private JDialog dialogo;
-	private JMenuItem mntmIngreso;
-	private JMenuItem mntmListado;
-	private JMenuItem mntmActualizacin;
-	private JMenuItem mntmIncidenciasPor;
-	private JMenuItem mntmIncidenciasPorTipo;
-	private JMenuItem mntmIncidenciasPorRango;
-	private JMenuItem mntmIncidenciasPorDemora;
+	private JMenuItem mntmIngreso, mntmListado, mntmActualizacin, mntmIncidenciasPor, mntmIncidenciasPorTipo,
+					  mntmIncidenciasPorRango, mntmIncidenciasPorDemora, mntmEspecialista, mntmTipoDocumentotem,
+					  mntmTipoIncidencia, mntmNewMenuItem, mntmUsuarios ;
+	private JSeparator separator_4;
+	private JSeparator separator_5;
+	//EndRegion
 	
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
-		new SplashScreen(8000);
+		//new SplashScreen(8000);
 		EventQueue.invokeLater(new Runnable() {
 			
 			public void run() {
 				try {
 					Menu_Principal frame = new Menu_Principal();
-					frame.setVisible(false);
+					frame.setVisible(true);
+					frame.setExtendedState(MAXIMIZED_BOTH);
 					//frame.setExtendedState(MAXIMIZED_BOTH);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -92,9 +84,6 @@ public class Menu_Principal extends JFrame implements ActionListener {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
 	public Menu_Principal() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Menu_Principal.class.getResource("/imagenes_x32/logo.png")));
 		setForeground(Color.DARK_GRAY);
@@ -157,20 +146,29 @@ public class Menu_Principal extends JFrame implements ActionListener {
 			}
 			{
 				mnNewMenu = new JMenu("Atención de Incidencias");
+				mnNewMenu.addActionListener(this);
 				mnNewMenu.setIcon(new ImageIcon(Menu_Principal.class.getResource("/imagenes_x24/atencion_incidencias_x24.png")));
 				menuBar.add(mnNewMenu);
 				{
 					mntmIngreso = new JMenuItem("Ingreso");
+					mntmIngreso.setIcon(new ImageIcon(Menu_Principal.class.getResource("/imagenes_x24/nuevo_documentox24.png")));
+					mntmIngreso.addActionListener(this);
 					mnNewMenu.add(mntmIngreso);
 				}
 				{
+					separator_4 = new JSeparator();
+					mnNewMenu.add(separator_4);
+				}
+				{
 					mntmListado = new JMenuItem("Listado");
+					mntmListado.setIcon(new ImageIcon(Menu_Principal.class.getResource("/imagenes_x24/lista_x24.png")));
 					mnNewMenu.add(mntmListado);
 				}
 				{
-					mntmActualizacin = new JMenuItem("Actualización");
-					mnNewMenu.add(mntmActualizacin);
+					separator_5 = new JSeparator();
+					mnNewMenu.add(separator_5);
 				}
+			
 			}
 			{
 				mnReportes = new JMenu("Reportes");
@@ -206,7 +204,7 @@ public class Menu_Principal extends JFrame implements ActionListener {
 			contentPane.add(desktopPane);
 		}
 		//Region Dialogo para Logeo
-			dialogo = new JDialog();
+			/*dialogo = new JDialog();
 			JPanel contentPane = new JPanel();
 			contentPane.setBounds(100,100, 400,108);
 			contentPane.setLayout(null);
@@ -245,7 +243,7 @@ public class Menu_Principal extends JFrame implements ActionListener {
 			}
 			dialogo.setVisible(true);
 			dialogo.setTitle("Login");
-			dialogo.setBounds(100,100, 400,108); 
+			dialogo.setBounds(100,100, 430,120); 
 			try {
 				dialogo.getContentPane().add(new JLabel(new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/imagenesx16/Loqin_x16.png")))));
 			} catch (IOException e) {
@@ -255,9 +253,14 @@ public class Menu_Principal extends JFrame implements ActionListener {
 			dialogo.setLocationRelativeTo(null);
 		
 		//EndRegion
+		 
+		 */
 	}
 	
 	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == mntmIngreso) {
+			do_mntmIngreso_actionPerformed(e);
+		}
 		if (e.getSource() == mntmEspecialista) {
 			do_mntmEspecialista_actionPerformed(e);
 		}
@@ -282,7 +285,6 @@ public class Menu_Principal extends JFrame implements ActionListener {
 	}
 	
 	private void do_btnSalir_actionPerformed(ActionEvent e) {
-		JOptionPane.showMessageDialog(null, "Hola");
 		System.exit(0);
 	}
 
@@ -300,47 +302,50 @@ public class Menu_Principal extends JFrame implements ActionListener {
 		TipoDocumento objTipoDocumento = TipoDocumento.getInstance();
 		General.addIFrame(desktopPane, objTipoDocumento);
 	}
+	
 	protected void do_mntmTipoIncidencia_actionPerformed(ActionEvent e) {
 		TipoIncidencia objTipoIncidencia = TipoIncidencia.getInstance();
 		General.addIFrame(desktopPane, objTipoIncidencia);
 	}
+	
 	protected void do_mntmEspecialista_actionPerformed(ActionEvent e) {
 		Especialista objEspecialista = Especialista.getInstance();
 		General.addIFrame(desktopPane, objEspecialista);
 	}
 	
 	private void do_btnIngresar_performed(ActionEvent e) {
-		String data[] = getData();
-		String user = data[0], userLogeado = txtUsuario.getText();
-		char[] pass = data[1].toCharArray();
-		char[] passLogeado = txtContraseña.getPassword();
 		
-		if(user.equals(userLogeado) && Arrays.equals(pass, passLogeado)){
-			JOptionPane.showMessageDialog(null, "Acceso exitoso");
-			dialogo.setVisible(false);
-			this.setVisible(true);
-			this.setExtendedState(MAXIMIZED_BOTH);
-		}else
-			JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrecta");
-	}
-	
-	String[] getData(){
-		String [] data= null;
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("users.txt"));
-			String user, pass, s[], linea;
-			while((linea = br.readLine()) != null){
-				s = linea.split(",");
-				user = s[0];
-				pass = s[1];
-				data = new String[]{
-					user, pass	
-				};
+			String user, linea, s[];
+			char[] pass;
+			try {
+				while((linea = br.readLine())!= null){
+					s = linea.split(",");
+					user = s[0];
+					pass = s[1].toCharArray();
+					if(user.equals(txtUsuario.getText()) && Arrays.equals(pass, txtContraseña.getPassword())){
+						JOptionPane.showMessageDialog(null, "Acceso exitoso");
+						dialogo.setVisible(false);
+						this.setVisible(true);
+						this.setExtendedState(MAXIMIZED_BOTH);
+					}
+				}
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
-			br.close();
-		} catch (Exception e) {
-			// TODO: handle exception
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		return data;
+	}
+	
+	protected void do_mntmIngreso_actionPerformed(ActionEvent e) {
+		//Incidencias frame = new Incidencias();
+		//frame.setVisible(true);
+		//frame.setLocationRelativeTo(null);
+		Incidencia inci = new Incidencia().getInstance();
+		General.addIFrame(desktopPane, inci);
 	}
 }

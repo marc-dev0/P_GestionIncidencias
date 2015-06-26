@@ -8,6 +8,7 @@ public class BE_Especialista {
 	private String especialidad;
 	private String anexo;
 	private Date fechaIngreso;
+	private int estado;
 	/**
 	 * @param codigo
 	 * @param nombres
@@ -73,5 +74,5 @@ public class BE_Especialista {
 	public void setEstado(int estado) {
 		this.estado = estado;
 	}
-	private int estado;
+	
 }

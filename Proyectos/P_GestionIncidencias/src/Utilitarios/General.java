@@ -2,6 +2,7 @@ package Utilitarios;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.MenuItem;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,8 +12,10 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 public class General {
@@ -56,9 +59,30 @@ public class General {
 			// TODO: handle exception
 		}
 	}
+
+	public static void habilitar(JMenuItem[] menuItem, Boolean estado){
+		try {
+			for(JMenuItem mi : menuItem){
+				if(mi.isEnabled() == false)
+					mi.setEnabled(estado);
+				else
+					mi.setEnabled(!estado);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+	
 	public static String parsearDatetoString(Date fecha){
+		String sDate="";
 		DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-		String sDate = df.format(fecha);
+		if(fecha != null){
+		
+		sDate = df.format(fecha);
+		}else{
+			String fechaR = "09-09-1999";
+			sDate = df.format(fechaR);
+		}
 		return sDate;
 	}
 	
@@ -111,6 +135,7 @@ public class General {
 			// TODO: handle exception
 		}
 	}
+	
 	public static void limpiar(Component component) {
         if (component instanceof JTextField) {
                 JTextField text = (JTextField) component;
@@ -120,6 +145,11 @@ public class General {
         if (component instanceof JComboBox){
         	JComboBox combo = (JComboBox) component;
         	combo.setSelectedIndex(0);
+        }
+        
+        if (component instanceof JTextArea){
+        	JTextArea textarea = (JTextArea) component;
+        	textarea.setText("");
         }
         
         if (component instanceof Container){

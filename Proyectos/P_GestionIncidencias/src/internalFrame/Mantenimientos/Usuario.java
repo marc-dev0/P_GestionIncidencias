@@ -2,14 +2,20 @@ package internalFrame.Mantenimientos;
 
 
 import Controlador.AreaController; 
+import Controlador.TipoDocumentoController;
 import Controlador.UsuarioController;
 import Entidades.BE_Usuario;
 
 import java.awt.EventQueue;
+import java.awt.Point;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Date;
+
 import Utilitarios.General;
+import Utilitarios.ToolTipWrapper;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -30,15 +36,20 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.JScrollPane;
 
 import java.awt.event.ActionEvent;
+import java.beans.FeatureDescriptor;
 
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.JRadioButton;
 import javax.swing.ImageIcon;
 
-public class Usuario extends JInternalFrame implements ActionListener{
+import java.awt.event.MouseListener;
+
+public class Usuario extends JInternalFrame implements ActionListener, MouseListener{
 	private static Usuario instance =  null;
+	private String estado="", sender="";
 	private AreaController areaController = new AreaController();
+	private TipoDocumentoController TDocumentoController = new TipoDocumentoController(); 
 	public static Usuario getInstance(){
 		if(instance==null){
 			instance = new Usuario();
@@ -52,7 +63,7 @@ public class Usuario extends JInternalFrame implements ActionListener{
 	private JLabel lblEstado,lblArea, lblCodigo, lblNombre, lblApellidos,lblTipoDocumento, lblDni, lblarea,
 				   lblCorreo, lblTelefono, lblFechaDeIngreso, lblBCodigo;
 	private JTextField txtCodigo,txtNombre, txtApellidos, txtDNI, txtCorreo, txtTelefono, txtBusquedaCodigo;
-	private JComboBox cboEstado, cboTipoDocumento, cboArea,cboBArea;
+	private JComboBox<String> cboEstado, cboTipoDocumento, cboArea,cboBArea;
 	private JButton btnRegistrar, btnEditar, btnEliminar, btnLimpiar,btnVolver, btnSalir;
 	private DefaultTableModel modelo;
 	private JTabbedPane tabbedPane;
@@ -63,10 +74,8 @@ public class Usuario extends JInternalFrame implements ActionListener{
 
 	//EndRegion
 	
-	
-	private String estado="";
 	private UsuarioController usuarioController = new UsuarioController();
-		public static void main(String[] args) {
+	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -102,7 +111,13 @@ public class Usuario extends JInternalFrame implements ActionListener{
 					scrollPane.setBounds(12, 73, 1129, 203);
 					panelListado.add(scrollPane);
 					{
-						table = new JTable();
+						table = new JTable(){
+							private static final long serialVersionUID= 1L;
+							public boolean isCellEditable(int row, int column){
+								return false;
+							};
+						};
+						table.addMouseListener(this);
 						//table.setAutoCreateRowSorter(true);
 						table.getTableHeader().setToolTipText("Click para alinear");
 						table.setRowSelectionAllowed(false);
@@ -110,15 +125,22 @@ public class Usuario extends JInternalFrame implements ActionListener{
 							new Object[][] {
 							},
 							new String[] {
-								"Codigo", "Nombre", "Apellidos", "idTipoDocumento", "Doc. de Identidad", "Area", "Correo", "Tel\u00E9fono", "Fecha de Ingreso", "Estado"
+								"Codigo", "Nombre", "Apellidos", "idTipoDocumento", "Doc. de Identidad", 
+								"codigo_Area", "Area", "Correo", "Tel\u00E9fono", "Fecha de Ingreso", 
+								"Estado"
 							}
 						));
+						
 						table.getColumnModel().getColumn(0).setMinWidth(50);
 						table.getColumnModel().getColumn(0).setMaxWidth(50);
 						table.getColumnModel().getColumn(3).setMinWidth(0);
 						table.getColumnModel().getColumn(3).setMaxWidth(0);
-						table.getColumnModel().getColumn(9).setMinWidth(0);
-						table.getColumnModel().getColumn(9).setMaxWidth(0);
+						table.getColumnModel().getColumn(5).setMinWidth(0);
+						table.getColumnModel().getColumn(5).setMaxWidth(0);
+						table.getColumnModel().getColumn(10).setMinWidth(0);
+						table.getColumnModel().getColumn(10).setMaxWidth(0);
+						table.getTableHeader().setResizingAllowed(false);
+						table.getTableHeader().setReorderingAllowed(false);
 						scrollPane.setViewportView(table);
 					    
 					}
@@ -181,9 +203,11 @@ public class Usuario extends JInternalFrame implements ActionListener{
 					}
 					{
 						cboBArea = new JComboBox();
+					
 						cboBArea.setBounds(254, 27, 130, 24);
 						cboBArea.setModel(new DefaultComboBoxModel(areaController.lista()));
 						panelFiltro.add(cboBArea);
+						
 						cboBArea.addActionListener(new ActionListener() {
 							
 							@Override
@@ -258,10 +282,7 @@ public class Usuario extends JInternalFrame implements ActionListener{
 				{
 					
 					cboTipoDocumento = new JComboBox();
-					cboTipoDocumento.setModel(new DefaultComboBoxModel(new String[] {"DNI", "CARNET DE EXTRANJERIA"}));
-					
-					//cboTipoDocumento.setModel(new DefaultComboBoxModel(areaController.lista());
-					//cboTipoDocumento.setModel(new DefaultComboBoxModel(vectorArea.toArray()));
+					cboTipoDocumento.setModel(new DefaultComboBoxModel(TDocumentoController.lista()));
 					cboTipoDocumento.setBounds(136, 101, 300, 24);
 					panelMantenimiento.add(cboTipoDocumento);
 				}
@@ -292,11 +313,12 @@ public class Usuario extends JInternalFrame implements ActionListener{
 				}
 				{
 					cboArea = new JComboBox();
+					cboArea.setModel(new DefaultComboBoxModel(areaController.lista()));
 					cboArea.setBounds(61, 163, 196, 24);
 					panelMantenimiento.add(cboArea);
 				}
 				{
-					dateChooser = new JDateChooser();
+					dateChooser = new JDateChooser(new Date());
 					dateChooser.setBounds(146, 256, 155, 24);
 					panelMantenimiento.add(dateChooser);
 				}
@@ -392,28 +414,42 @@ public class Usuario extends JInternalFrame implements ActionListener{
 	protected void do_btnRegistrar_actionPerformed(ActionEvent e) {
 	
 		try {
+			
 			if(tabbedPane.getSelectedIndex() == 0){
+				
 				General.changePanel(tabbedPane, true);
 				habiltarBotones(true);
 				txtNombre.requestFocus();
 				int codigo = usuarioController.generarCodigo();
 				txtCodigo.setText(""+ codigo);
 				estado = "Guardar";
-				for(String s : areaController.lista()){
+				
+				if(cboTipoDocumento.getItemCount() == 0)
+					for(String s : TDocumentoController.lista()){
+						cboTipoDocumento.addItem(s);
+					}	
+		
+				if(cboArea.getItemCount() == 0)
+					for(String s : areaController.lista()){
 					cboArea.addItem(s);
-				}
+					}
+				
+				dateChooser.setDate(new Date());
 			}
+			
 			else if(tabbedPane.getSelectedIndex() == 1){
 				
 				if (estado == "Guardar"){
 				BE_Usuario objUsuario = new BE_Usuario();
-				usuarioController.registrarUsuario(objUsuario);
 				setDataUsuario(objUsuario);
+				usuarioController.registrarUsuario(objUsuario);
+				usuarioController.guardarUsuario(objUsuario);
 				addRowInserted();
 				General.changePanel(tabbedPane, false);
 				habiltarBotones(true);
 				General.limpiar(panelMantenimiento);
 				estado ="";
+				sender = "Guardando";
 				}
 				else if(estado == "Editar"){
 					
@@ -422,11 +458,13 @@ public class Usuario extends JInternalFrame implements ActionListener{
 					int pos = usuarioController.getPosUsuario(u);
 					setDataUsuario(u);
 					usuarioController.modificarUsuario(pos, u);
+					usuarioController.guardarUsuario();
 					editRowSelected(u);
 					General.changePanel(tabbedPane, false);
 					General.limpiar(panelMantenimiento);
 					habiltarBotones(true);
 					estado ="";
+					sender = "Editando";
 				}
 			}
 			//JButton[] botones = {btnRegistrar,btnVolver};
@@ -436,7 +474,6 @@ public class Usuario extends JInternalFrame implements ActionListener{
 		}
 		
 	}
-
 
 	protected void do_btnLimpiar_actionPerformed(ActionEvent e) {
 		General.limpiar(panelMantenimiento);
@@ -520,7 +557,7 @@ public class Usuario extends JInternalFrame implements ActionListener{
 				BE_Usuario u = usuarioController.listarUsuarioxCodigo(codigo);
 				Object[] data = new Object[]{
 						u.getCodigo(), u.getNombre(),u.getApellido(),
-						u.getIdTipoDocumento(), u.getDocumento(), u.getArea(),
+						u.getIdTipoDocumento(), u.getDocumento(), u.getCodigoArea(),u.getArea(),
 						u.getCorreo(), u.getTelefono(), General.parsearDatetoString(u.getFechaIngreso()),
 						u.getEstado()
 				};
@@ -530,37 +567,42 @@ public class Usuario extends JInternalFrame implements ActionListener{
 	};
 	
 	//Region Metodos para JTable
+	
 	void carryDataToControls(int r) {
 		txtCodigo.setText(""+ table.getValueAt(r, 0));
 		txtNombre.setText(""+ table.getValueAt(r, 1));
 		txtApellidos.setText(""+ table.getValueAt(r,2));
-		cboTipoDocumento.setSelectedIndex((int) table.getValueAt(r,3));
+		int codigo = (int) table.getValueAt(r, 3);
+		cboTipoDocumento.setSelectedIndex(codigo);
 		txtDNI.setText(""+ table.getValueAt(r, 4));
 		cboArea.setSelectedIndex((int) table.getValueAt(r, 5));
-		txtCorreo.setText("" + table.getValueAt(r,6));
-		txtTelefono.setText(""+ table.getValueAt(r, 7));
-		dateChooser.setDate(General.parseStringtoDate((String) table.getValueAt(r, 8)));
-		cboEstado.setSelectedIndex((int) table.getValueAt(r, 9));
+		txtCorreo.setText("" + table.getValueAt(r,7));
+		txtTelefono.setText(""+ table.getValueAt(r, 8));
+		dateChooser.setDate(General.parseStringtoDate((String) table.getValueAt(r, 9)));
+		cboEstado.setSelectedIndex((int) table.getValueAt(r, 10));
 	}
+	
 	void addRowInserted(){
 		modelo.addRow(new Object[]{
 				leerCodigo(), leerNombre(), leerApellidos(), leerComboTipoDocumento(), leerDocumento(),
-				leerArea(), leerCorreo(), leerTelefono(), leerFecha(), leerEstado()
+				leerCodigoArea(),leerArea(), leerCorreo(), leerTelefono(), leerFecha(), leerEstado()
 			});
 	}
 	
 	void editRowSelected(BE_Usuario u){
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
+	
 		model.setValueAt(u.getCodigo(), table.getSelectedRow(),0);
 		model.setValueAt(u.getNombre(), table.getSelectedRow(), 1);
 		model.setValueAt(u.getApellido(), table.getSelectedRow(), 2);
 		model.setValueAt(u.getIdTipoDocumento(), table.getSelectedRow(), 3);
 		model.setValueAt(u.getDocumento(), table.getSelectedRow(), 4);
-		model.setValueAt(u.getArea(), table.getSelectedRow(), 5);
-		model.setValueAt(u.getCorreo(), table.getSelectedRow(), 6);
-		model.setValueAt(u.getTelefono(), table.getSelectedRow(), 7);
-		model.setValueAt(General.parsearDatetoString(u.getFechaIngreso()), table.getSelectedRow(), 8);
-		model.setValueAt(u.getEstado(), table.getSelectedRow(), 9);
+		model.setValueAt(u.getCodigoArea(), table.getSelectedRow(), 5);
+		model.setValueAt(u.getArea(), table.getSelectedRow(), 6);
+		model.setValueAt(u.getCorreo(), table.getSelectedRow(), 7);
+		model.setValueAt(u.getTelefono(), table.getSelectedRow(), 8);
+		model.setValueAt(General.parsearDatetoString(u.getFechaIngreso()), table.getSelectedRow(), 9);
+		model.setValueAt(u.getEstado(), table.getSelectedRow(), 10);
 	}
 	
 	void fillTable(){
@@ -570,7 +612,7 @@ public class Usuario extends JInternalFrame implements ActionListener{
 			BE_Usuario u = usuarioController.getUsuario(i);
 			Object[] data = new Object[]{
 					u.getCodigo(), u.getNombre(), u.getApellido(),
-					u.getIdTipoDocumento(), u.getDocumento(), u.getArea(),
+					u.getIdTipoDocumento(), u.getDocumento(), u.getCodigoArea(), u.getArea(),
 					u.getCorreo(), u.getTelefono(), General.parsearDatetoString(u.getFechaIngreso()),
 					u.getEstado()
 			};
@@ -587,7 +629,7 @@ public class Usuario extends JInternalFrame implements ActionListener{
 			BE_Usuario u = aux.get(i);
 			Object[] data = new Object[]{
 					u.getCodigo(), u.getNombre(), u.getApellido(),
-					u.getIdTipoDocumento(), u.getDocumento(), u.getArea(),
+					u.getIdTipoDocumento(), u.getDocumento(), u.getCodigoArea(), u.getArea(),
 					u.getCorreo(), u.getTelefono(), General.parsearDatetoString(u.getFechaIngreso()),
 					u.getEstado()
 			};
@@ -602,6 +644,7 @@ public class Usuario extends JInternalFrame implements ActionListener{
 	int leerCodigo(){
 		return Integer.parseInt(txtCodigo.getText());
 	}
+	
 	String leerNombre(){
 		return txtNombre.getText();
 	}
@@ -617,12 +660,17 @@ public class Usuario extends JInternalFrame implements ActionListener{
 	String leerDocumento(){
 		return txtDNI.getText();
 	}
+	
 	String leerCorreo(){
 		return txtCorreo.getText();
 	}
 	
-	int leerArea(){
+	int leerCodigoArea(){
 		return cboArea.getSelectedIndex();
+	}
+	
+	String leerArea(){
+		return cboArea.getSelectedItem().toString();
 	}
 	
 	String leerTelefono(){
@@ -635,15 +683,7 @@ public class Usuario extends JInternalFrame implements ActionListener{
 	
 	String leerFecha(){
 		Date fecha = dateChooser.getDate();
-		/*String dia = String.valueOf((dateChooser.getCalendar().get(Calendar.DAY_OF_MONTH)));
-		String mes = String.valueOf((dateChooser.getCalendar().get(Calendar.MONTH)));
-		String año =  String.valueOf((dateChooser.getCalendar().get(Calendar.YEAR)));*/
 		return General.parsearDatetoString(fecha);
-	}
-	
-	protected void habiltarBotones(boolean estado){
-		JButton[] botones = {btnLimpiar,btnEditar,btnEliminar,btnVolver};
-		General.habilitar(botones, estado);
 	}
 	
 	void setDataUsuario(BE_Usuario objUsuario){
@@ -653,12 +693,115 @@ public class Usuario extends JInternalFrame implements ActionListener{
 		objUsuario.setIdTipoDocumento(leerComboTipoDocumento());
 		objUsuario.setDocumento(leerDocumento());
 		objUsuario.setCorreo(leerCorreo());
+		objUsuario.setCodigoArea(leerCodigoArea());
 		objUsuario.setArea(leerArea());
 		objUsuario.setTelefono(leerTelefono());
 		objUsuario.setEstado(leerEstado());
 		objUsuario.setFechaIngreso(General.parseStringtoDate(leerFecha()));
 	}
-	//EndRegion
 	
+	//EndRegion
+	protected void habiltarBotones(boolean estado){
+		JButton[] botones = {btnLimpiar,btnEditar,btnEliminar,btnVolver};
+		General.habilitar(botones, estado);
+	}
+	
+	
+//	protected void do_btnSend_actionPerformed(ActionEvent e) {
+//		String nombre = (String) table.getValueAt(table.getSelectedRow(), 1);
+//		int codigo = (int) table.getValueAt(table.getSelectedRow(), 0);
+//		
+//		
+//		if(sender.equals("Editando")){
+//			Incidencia.cboMUsuario.removeAllItems();
+//			for(String s : usuarioController.lista()){
+//				Incidencia.cboMUsuario.addItem(s);
+//			}
+//			sender = "";
+//		}else{
+//			
+//			verifica(codigo, nombre);
+//			if(verifica(codigo, nombre))
+//			{
+//				if(JOptionPane.showConfirmDialog(null, "El usuario seleccionado ya existe. ¿Desea volver al formulario"
+//						+ "de incidencias?",  "Aviso",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION){
+//					this.dispose();
+//					return;
+//				}else{
+//					return;
+//				}
+//				
+//			}else{
+//				Incidencia.cboMUsuario.addItem(nombre);
+//				Incidencia.cboMUsuario.setSelectedItem(nombre);
+//				Incidencia.txtPrueba.setText(txtBusquedaCodigo.getText());
+//				this.dispose();
+//			}
+//		}
+//	}
+	
+	private boolean verifica(int codigo, String nombre){
+		for(int i = 0; i < Incidencia.cboMUsuario.getItemCount(); i++){
+			Object item = Incidencia.cboMUsuario.getItemAt(i);
+			if(item.equals(nombre)){
+				
+				int cod = i +1;
+				JOptionPane.showMessageDialog(null, "" + cod);
+				if(cod == codigo){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	public void mouseClicked(MouseEvent e) {
+		
+		if(e.getClickCount() ==2)
+		{
+			String nombre = (String) table.getValueAt(table.getSelectedRow(), 1);
+			int codigo = (int) table.getValueAt(table.getSelectedRow(), 0);
+			
+			if(sender.equals("Editando")){
+				Incidencia.cboMUsuario.removeAllItems();
+				for(String s : usuarioController.lista()){
+					Incidencia.cboMUsuario.addItem(s);
+				}
+				sender = "";
+				
+			}else{
+				
+				verifica(codigo, nombre);
+				if(verifica(codigo, nombre))
+				{
+					if(JOptionPane.showConfirmDialog(null, "El usuario seleccionado ya existe. ¿Desea volver al formulario"
+							+ "de incidencias?",  "Aviso",JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE) == JOptionPane.YES_OPTION){
+						this.dispose();
+						return;
+					}else{
+						return;
+					}
+					
+				}else{
+					Incidencia.cboMUsuario.addItem(nombre);
+					Incidencia.cboMUsuario.setSelectedItem(nombre);
+					//Incidencia.txtPrueba.setText(txtBusquedaCodigo.getText());
+					this.dispose();
+				}
+			}
+		}
+	}
+	public void mouseEntered(MouseEvent e) {
+	}
+	public void mouseExited(MouseEvent e) {
+	}
+	public void mousePressed(MouseEvent e) {
+		if (e.getSource() == table) {
+			do_table_mousePressed(e);
+		}
+	}
+	public void mouseReleased(MouseEvent e) {
+	}
+	protected void do_table_mousePressed(MouseEvent e) {
+	}
 }
 

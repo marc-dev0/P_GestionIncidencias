@@ -40,6 +40,7 @@ public class TipoDocumento extends JInternalFrame implements ActionListener{
 		}
 		return instance;
 	}
+	
 	private JRadioButton rdbTodos;
 	private JLabel lblEstado, lblCodigo, lblDescripcion,lblAbreviacion, lblBCodigo;
 	private JTextField txtCodigo, txtDescripcion, txtAbreviacion, txtBusquedaCodigo;
@@ -108,6 +109,8 @@ public class TipoDocumento extends JInternalFrame implements ActionListener{
 						table.getColumnModel().getColumn(3).setMaxWidth(0);
 						//table.getColumnModel().getColumn(9).setMinWidth(0);
 						//table.getColumnModel().getColumn(9).setMaxWidth(0);
+						table.getTableHeader().setReorderingAllowed(false);
+						table.getTableHeader().setResizingAllowed(false);
 						scrollPane.setViewportView(table);
 					    
 					}
@@ -302,6 +305,7 @@ public class TipoDocumento extends JInternalFrame implements ActionListener{
 				setDataTipoDocumento(a);
 				addRowInserted(a);
 				TipoDocumentoController.agregarTipoDocumento(a);
+				TipoDocumentoController.guardarTipoDocumento(a);
 				//JOptionPane.showMessageDialog(null, "" + TipoDocumentoController.size());
 				General.changePanel(tabbedPane, false);
 				habiltarBotones(true);
@@ -313,6 +317,7 @@ public class TipoDocumento extends JInternalFrame implements ActionListener{
 				int pos = TipoDocumentoController.getPosTipoDocumento(a);
 				setDataTipoDocumento(a);
 				TipoDocumentoController.modificarTipoDocumento(pos, a);
+				TipoDocumentoController.guardarTipoDocumento();
 				editRowSelected(a);
 				General.changePanel(tabbedPane, false);
 				habiltarBotones(true);

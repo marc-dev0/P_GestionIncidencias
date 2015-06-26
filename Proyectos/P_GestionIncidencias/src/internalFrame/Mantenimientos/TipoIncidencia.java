@@ -30,7 +30,6 @@ import Utilitarios.General;
 import com.toedter.calendar.JDateChooser;
 import javax.swing.ImageIcon;
 
-
 public class TipoIncidencia extends JInternalFrame implements ActionListener{
 	TipoIncidenciaController TipoIncidenciaController = new TipoIncidenciaController();
 	static TipoIncidencia instance = null;
@@ -108,6 +107,8 @@ public class TipoIncidencia extends JInternalFrame implements ActionListener{
 						table.getColumnModel().getColumn(3).setMaxWidth(0);
 						//table.getColumnModel().getColumn(9).setMinWidth(0);
 						//table.getColumnModel().getColumn(9).setMaxWidth(0);
+						table.getTableHeader().setReorderingAllowed(false);
+						table.getTableHeader().setResizingAllowed(false);
 						scrollPane.setViewportView(table);
 					    
 					}
@@ -302,6 +303,7 @@ public class TipoIncidencia extends JInternalFrame implements ActionListener{
 				setDataTipoIncidencia(a);
 				addRowInserted(a);
 				TipoIncidenciaController.agregarTipoIncidencia(a);
+				TipoIncidenciaController.guardarTipoIncidencia(a);
 				//JOptionPane.showMessageDialog(null, "" + TipoIncidenciaController.size());
 				General.changePanel(tabbedPane, false);
 				habiltarBotones(true);
@@ -313,6 +315,7 @@ public class TipoIncidencia extends JInternalFrame implements ActionListener{
 				int pos = TipoIncidenciaController.getPosTipoIncidencia(a);
 				setDataTipoIncidencia(a);
 				TipoIncidenciaController.modificarTipoIncidencia(pos, a);
+				TipoIncidenciaController.guardarTipoIncidencia();
 				editRowSelected(a);
 				General.changePanel(tabbedPane, false);
 				habiltarBotones(true);

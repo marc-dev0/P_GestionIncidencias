@@ -10,28 +10,32 @@ public class BE_Usuario {
 	private String apellidos;
 	private int idTipoDocumento;
 	private String documento;
-	private int area;
+	private int codigo_area;
+	private String area;
 	private String correo;
 	private String telefono;
 	private Date fechaIngreso;
 	private int estado;
 	
-	public BE_Usuario(int codigo, String nombre, String apellidos, int idDocumento, String documento, int area, String correo, String telefono,
-					  Date fecha, int estado){
+	public BE_Usuario(int codigo, String nombre, String apellidos, int idDocumento, String documento, 
+					  int codigo_area, String area, String correo, String telefono, Date fecha, int estado){
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.idTipoDocumento = idDocumento;
 		this.documento = documento;
+		this.codigo_area = codigo_area;
 		this.area = area;
 		this.correo = correo;
 		this.telefono = telefono;
 		this.fechaIngreso = fecha;
 		this.estado = estado;
 	}
+	
 	public BE_Usuario(){
 		
 	}
+	
 	public int getCodigo() {
 		return codigo;
 	}
@@ -55,6 +59,7 @@ public class BE_Usuario {
 	public void setApellidos(String apellidos) {
 		this.apellidos = apellidos;
 	}
+	
 	public int getIdTipoDocumento() {
 		return idTipoDocumento;
 	}
@@ -71,14 +76,22 @@ public class BE_Usuario {
 		this.documento = documento;
 	}
 
-	public int getArea() {
+	public int getCodigoArea() {
+		return codigo_area;
+	}
+
+	public void setCodigoArea(int area) {
+		this.codigo_area = area;
+	}
+
+	public String getArea(){
 		return area;
 	}
-
-	public void setArea(int area) {
+	
+	public void setArea(String area){
 		this.area = area;
 	}
-
+	
 	public String getCorreo() {
 		return correo;
 	}

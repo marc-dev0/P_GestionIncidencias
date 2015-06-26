@@ -33,7 +33,7 @@ public class Area extends JInternalFrame implements ActionListener{
 
 	private static Area instance = null;
 	private String estado ="";
-	private AreaController AreaController = new AreaController();
+	private AreaController AController = new AreaController();
 	public static Area getInstance(){
 
 		if(instance == null)
@@ -41,7 +41,7 @@ public class Area extends JInternalFrame implements ActionListener{
 		return instance;
 	}
 	
-	//Region variables de controles
+	//Region Controles
 	private JTextArea txtDescripcion;
 	private JRadioButton rdbTodos;
 	private JLabel lblEstado, lblCodigo, lblNombre, lblDescripcion,lblNombreCorto, lblNombreLargo, lblBCodigo;
@@ -96,6 +96,7 @@ public class Area extends JInternalFrame implements ActionListener{
 						//table.setAutoCreateRowSorter(true);
 						table.getTableHeader().setToolTipText("Click para alinear");
 						table.setRowSelectionAllowed(false);
+
 						table.setModel(modelo = new DefaultTableModel(
 							new Object[][] {
 							},
@@ -108,6 +109,8 @@ public class Area extends JInternalFrame implements ActionListener{
 						table.getColumnModel().getColumn(0).setMaxWidth(50);
 						table.getColumnModel().getColumn(5).setMinWidth(0);
 						table.getColumnModel().getColumn(5).setMaxWidth(0);
+						table.getTableHeader().setResizingAllowed(false);
+						table.getTableHeader().setReorderingAllowed(false);
 						/*table.getColumnModel().getColumn(9).setMinWidth(0);
 						table.getColumnModel().getColumn(9).setMaxWidth(0);*/
 						scrollPane.setViewportView(table);
@@ -238,7 +241,9 @@ public class Area extends JInternalFrame implements ActionListener{
 					scrollPane_1.setBounds(110, 72, 227, 101);
 					panelMantenimiento.add(scrollPane_1);
 					{
-						txtDescripcion = new JTextArea();
+						txtDescripcion = new JTextArea(5,10);
+						txtDescripcion.setLineWrap(true);
+						txtDescripcion.setWrapStyleWord(true);
 						scrollPane_1.setViewportView(txtDescripcion);
 					}
 				}
@@ -322,7 +327,7 @@ public class Area extends JInternalFrame implements ActionListener{
 		if(tabbedPane.getSelectedIndex()==0){
 			General.changePanel(tabbedPane,true);
 			habiltarBotones(true);
-			txtCodigo.setText("" + AreaController.generarCodigo());
+			txtCodigo.setText("" + AController.generarCodigo());
 			txtNombre.requestFocus();
 			estado = "Guardar";
 			//JOptionPane.showMessageDialog(null, "" + AreaController.size());
@@ -331,7 +336,8 @@ public class Area extends JInternalFrame implements ActionListener{
 				BE_Area a = new BE_Area();
 				setDataArea(a);
 				addRowInserted(a);
-				AreaController.agregarArea(a);
+				AController.agregarArea(a);
+				AController.guardarArea(a);
 				//JOptionPane.showMessageDialog(null, "" + AreaController.size());
 				General.changePanel(tabbedPane, false);
 				habiltarBotones(true);
@@ -339,10 +345,11 @@ public class Area extends JInternalFrame implements ActionListener{
 				estado ="";
 			}else if(estado =="Editar"){
 				int codigo = Integer.parseInt(txtCodigo.getText());
-				BE_Area a = AreaController.buscarAreaxCodigo(codigo);
-				int pos = AreaController.getPosArea(a);
+				BE_Area a = AController.buscarAreaxCodigo(codigo);
+				int pos = AController.getPosArea(a);
 				setDataArea(a);
-				AreaController.modificarArea(pos, a);
+				AController.modificarArea(pos, a);
+				AController.guardarArea();
 				editRowSelected(a);
 				General.changePanel(tabbedPane, false);
 				habiltarBotones(true);
@@ -350,17 +357,6 @@ public class Area extends JInternalFrame implements ActionListener{
 				estado = "";
 			}
 		}
-	}
-	
-	private void editRowSelected(BE_Area a) {
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		int row = table.getSelectedRow();
-		model.setValueAt(a.getCodigo(), row, 0);
-		model.setValueAt(a.getNombre(), row, 1);
-		model.setValueAt(a.getDescripcion(), row, 2);
-		model.setValueAt(a.getNombreCorto(), row, 3);
-		model.setValueAt(a.getNombreLargo(), row, 4);
-		model.setValueAt(a.getEstado(), row, 5);
 	}
 
 	protected void do_btnLimpiar_actionPerformed(ActionEvent e) {
@@ -384,8 +380,8 @@ public class Area extends JInternalFrame implements ActionListener{
 				{
 					BE_Area a = new BE_Area();
 					int codigo = (int) table.getValueAt(rowSelected, 0);
-					a = AreaController.buscarAreaxCodigo(codigo);
-					AreaController.eliminarArea(a);
+					a = AController.buscarAreaxCodigo(codigo);
+					AController.eliminarArea(a);
 					modelo.removeRow(rowSelected);
 				}else
 					return;
@@ -412,7 +408,7 @@ public class Area extends JInternalFrame implements ActionListener{
 		
 	protected void do_rdbTodos_actionPerformed(ActionEvent e) {
 		if(rdbTodos.isSelected()){
-			if(AreaController.size()== 0){
+			if(AController.size()== 0){
 				JOptionPane.showMessageDialog(null, "No hay data");
 				return;
 			}else{
@@ -434,7 +430,7 @@ public class Area extends JInternalFrame implements ActionListener{
 				}else{
 					int codigo = Integer.parseInt(txtBusquedaCodigo.getText());
 					BE_Area a = new BE_Area();
-					a = AreaController.buscarAreaxCodigo(codigo);
+					a = AController.buscarAreaxCodigo(codigo);
 					Object[] data = new Object[]{
 						a.getCodigo(), a.getNombre(), a.getDescripcion(), a.getNombreCorto(), a.getNombreLargo(),a.getEstado()
 					};
@@ -449,12 +445,24 @@ public class Area extends JInternalFrame implements ActionListener{
 			JOptionPane.showMessageDialog(null, "Hola");
 		}
 	}
+	
 	protected void habiltarBotones(boolean estado){
 		JButton[] botones = {btnLimpiar,btnEditar,btnEliminar,btnVolver};
 		General.habilitar(botones, estado);
 	}
 	
 	//Region JTable()
+	private void editRowSelected(BE_Area a) {
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		int row = table.getSelectedRow();
+		model.setValueAt(a.getCodigo(), row, 0);
+		model.setValueAt(a.getNombre(), row, 1);
+		model.setValueAt(a.getDescripcion(), row, 2);
+		model.setValueAt(a.getNombreCorto(), row, 3);
+		model.setValueAt(a.getNombreLargo(), row, 4);
+		model.setValueAt(a.getEstado(), row, 5);
+	}
+	
 	void addRowInserted(BE_Area a){
 		Object[] data = new Object[]{
 			a.getCodigo(), a.getNombre(), a.getDescripcion(), a.getNombreCorto(),
@@ -474,8 +482,8 @@ public class Area extends JInternalFrame implements ActionListener{
 	
 	void fillTable(){
 		modelo.setRowCount(0);
-		for(int i=0; i < AreaController.size(); i++){
-			BE_Area a = AreaController.getArea(i);
+		for(int i=0; i < AController.size(); i++){
+			BE_Area a = AController.getArea(i);
 			Object[] data = new Object[]{
 				a.getCodigo(), a.getNombre(), a.getDescripcion(), a.getNombreCorto(), a.getNombreLargo(),
 				a.getEstado()
@@ -495,7 +503,13 @@ public class Area extends JInternalFrame implements ActionListener{
 	}
 	
 	public String leerDescripcion(){
-		return txtDescripcion.getText();
+		
+		String texto = txtDescripcion.getText(), descri="";
+		String[] tokens = texto.split("\n");
+		for(String s : tokens){
+			descri += s + "";
+		}
+		return descri;
 	}
 	
 	public String leerNombreCorto(){
@@ -513,13 +527,11 @@ public class Area extends JInternalFrame implements ActionListener{
 	void setDataArea(BE_Area a){
 		a.setCodigo(Integer.parseInt(txtCodigo.getText()));
 		a.setNombre(txtNombre.getText());
-		a.setDescripcion(txtDescripcion.getText());
+		a.setDescripcion(leerDescripcion());
 		a.setNombreCorto(txtNombreCorto.getText());
 		a.setNombreLargo(txtNombreLargo.getText());
-		a.setEstado(cboEstado.getSelectedIndex());
-		
+		a.setEstado(cboEstado.getSelectedIndex());	
 	}
-	
 	//EndRegion
 }
 		
