@@ -1,0 +1,18 @@
+1,lol,x,0,x,0,Recursos Humanos,x,x,24-06-2015,0
+2,Ursus,Rojas,0,4841231,0,Recursos Humanos,asdasasdsdsad,sadsadsadsa,25-06-2015,0
+3,,,0,,0,Recursos Humanos,,,25-06-2015,0
+4,asd,asd,0,asd,0,Recursos Humanos,sd,ad,20-06-2015,0
+5,xd,xd,0,xdxd,0,Recursos Humanos,xd,xd,25-06-2015,0
+6,xxx,xxx,0,xxx,0,Recursos Humanos,xxx,xxxx,25-06-2015,0
+7,kkk,nmnm,0,44,0,Recursos Humanos,mmmm,555,25-06-2015,0
+8,miel,a,0,a,0,Recursos Humanos,a,a,25-06-2015,0
+9,das,a,0,a,0,Recursos Humanos,a,a,25-06-2015,0
+10,xdxdxd,x,0,x,0,Recursos Humanos,x,x,25-06-2015,0
+11,lol,xx,0,xxx,0,Recursos Humanos,xx,xxx,25-06-2015,0
+12,xd,xx,0,xxx,0,Recursos Humanos,xxxx,xxx,25-06-2015,0
+13,Miguel,Rojas Coraje,0,47413254,0,Recursos Humanos,x,d,25-06-2015,0
+14,amy,xdx,0,xd,0,Recursos Humanos,xd,dx,25-06-2015,0
+15,Jeny,xx,0,xx,0,Recursos Humanos,xxx,xxx,25-06-2015,0
+16,pepe,pepe,0,pepe,0,Recursos Humanos,pepe,pepe,25-06-2015,0
+17,miguel,rojas,0,47413254,0,Recursos Humanos,m.rojascoraje,930632387,26-06-2015,0
+18,xxx,xxx,0,xxx,0,Recursos Humanos,xx,xxx,26-06-2015,0
