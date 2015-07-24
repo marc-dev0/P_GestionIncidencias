@@ -1,0 +1,10 @@
+Notas:
+
+El usuario para el logeoes el nro del DNI del fichero.
+El password es la concatenacion de la primera letra del nombre + apellido completo + 1 digito del dni
+
+Ejemplo:
+Nombre		Apellido		DNI			Contraseña
+Miguel 		rojas 			45221123 	Mrojas4
+
+Saludos.

@@ -1,0 +1,6 @@
+0,Documento Nacional de Identidad,DNI,0
+1,Carnet de Extranjeria,CE,1
+2,Registro Unio de Contribuyentes,RUC,1
+3,PASAPORTE,PASAPORTE,0
+4,Partida de Nacimiento-Identidad,P.NAC,0
+5,Otros,Otros,0

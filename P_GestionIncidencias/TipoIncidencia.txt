@@ -1,0 +1,5 @@
+0,Alteración en los permisos; altas o bajas de usuarios,Permisos,0
+1,Olvido de contraseña,Olvido,0
+2,Bloqueo de cuenta por reiteración de intentos de conexión fallidos,Login Fallido,0
+3,Pérdida de Datos,,0
+4,xx,xx,0

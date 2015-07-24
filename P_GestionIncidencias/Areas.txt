@@ -1,0 +1,7 @@
+0,MARKETING,Área encarga de conocer las necesidades del mercado determinar productos y servicios que satisfacen las necesidades de los consumidores potenciales fijar precios promover y distribuir,MK,MARKETING,0
+1,RECURSOS HUMANOS,Área encargada de seleccionar contratar; remunerar; capacitar; etc.; al personal de la empresa,RRHH,Recursos Humanos,0
+2,ADMINISTRACIÓN,Área encargada de controlar toda la documentación de la empresa. ,Admin,Administración,0
+3,GESTIÓN,Área encargada de la dirección de la empresa por la cual una o arias personas tratan de lograr los objetivos que la organización se ha marcado,Gst,Gestión,0
+4,CONTABILIDAD Y FINANZAS,Área encargada de registrar la información cuantitativa expresada en unidades monetarias (pesos; dólares; o cualquier moneda) de las transacciones,CF,Contabilidad y Finanzas,0
+5,PRODUCCIÓN,Área encargada de las actividades a través de las cuales la empresa crea los productos o presta los servicios que son el objeto de su actividad,PR,Producción,0
+6,SISTEMAS,Área encargada de brindar soporte a las otras áreas.,SM,,0

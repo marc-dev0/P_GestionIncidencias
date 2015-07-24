@@ -1,0 +1,9 @@
+0,Miguel,rojas,0,47413254,2,930632387,5754057,16-07-2015,0,Mrojas4
+1,Amy,Mejia Navarro,0,44224477,4,icegirl@hotmail.com,912100411,16-07-2015,0,AMejia Navarro4
+2,Juan,Perez,0,44332211,0,jperez@gmail.com,930442442,16-07-2015,0,JPerez4
+3,Miguel,Rojas,0,44110111,5,,,17-07-2015,0,MRojas4
+4,Elizabeth,Toribio,0,44331122,0,,,17-07-2015,0,EToribio4
+5,Edgar,soto,0,47413254,3,,,17-07-2015,0,Esoto4
+6,Raul,Suarez,0,55443221,4,rsuarez@hotmail.com,,17-07-2015,0,RSuarez5
+7,Pepe,Rosales,0,47412111,6,,,17-07-2015,0,PRosales4
+8,Carlos,Gonzales,0,11133322,6,,,17-07-2015,0,CGonzales1
